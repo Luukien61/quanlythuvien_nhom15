@@ -7,10 +7,6 @@ package com.mycompany.baitapnhom1.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author DELL
- */
 public class ListLoaiSach {
     List<LoaiSach> lsSach = new ArrayList<>();
     

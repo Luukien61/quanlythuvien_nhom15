@@ -4,17 +4,22 @@
  */
 package com.mycompany.baitapnhom1.view;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import com.mycompany.baitapnhom1.Baitapnhom1;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.model.ResultModel;
 import com.mycompany.baitapnhom1.model.UserList;
+import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
+import com.mycompany.baitapnhom1.util.AppUtil;
+import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
@@ -31,11 +36,13 @@ public class DangNhap extends javax.swing.JFrame {
      */
 
     private final UserService userService;
+    private final BookService bookService;
 
-    public DangNhap(UserService userService) {
+    public DangNhap(UserService userService,BookService bookService) {
         initComponents();
         setLocationRelativeTo(null);
         this.userService=userService;
+        this.bookService=bookService;
     }
 
     /*
@@ -173,19 +180,18 @@ public class DangNhap extends javax.swing.JFrame {
         if(!username.isEmpty()&& !pass.isEmpty()){
             var data = checkUser(username,pass);
             if(data.getData()!=null){
-                menu main = new menu();
+                AppUtil.setCurrentUser((UserEntity) data.getData());
+                MenuFrame main = new MenuFrame(userService,bookService);
                 main.setVisible(true);
                 this.dispose();
             }
             else{
                 resetForm();
             }
-            JOptionPane.showMessageDialog(this, data.getMessage());
+            JOptionPaneUtil.showMessageDialog(data.getMessage(),1000,null);
         }else {
             JOptionPane.showMessageDialog(this, "Vui long nhap userName va password");
         }
-
-
     }
 
     private ResultModel checkUser(String username, String pass) {
@@ -193,7 +199,7 @@ public class DangNhap extends javax.swing.JFrame {
             UserEntity user = userService.findUserByUserNameAndPassword(username,pass);
             if(user!=null){
                 return new ResultModel(user,"Đăng nhập thành công");
-            }else return new ResultModel(user,"Tên khoản hoặc mật khẩu không đúng. Vui lòng nhập lại");
+            }else return new ResultModel(null,"Tên khoản hoặc mật khẩu không đúng. Vui lòng nhập lại");
         }catch (SQLException e) {
             return new ResultModel(null,e.getMessage());
         }

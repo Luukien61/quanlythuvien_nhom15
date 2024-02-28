@@ -4,10 +4,7 @@
  */
 package com.mycompany.baitapnhom1.model;
 
-/**
- *
- * @author DELL
- */
+
 public class LoaiSach {
     private String id;
     private String name;

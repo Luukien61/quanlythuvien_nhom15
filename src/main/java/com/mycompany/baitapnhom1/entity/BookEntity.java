@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -18,7 +19,8 @@ public class BookEntity extends BaseEntity {
     private String author;
     private String publisher;
     private Date publishDate;
-    private int quantity;
+    private int totalQuantity;
+    private int restQuantity;
     @Enumerated(EnumType.STRING)
     private BookCategory category;
     @ManyToMany()
