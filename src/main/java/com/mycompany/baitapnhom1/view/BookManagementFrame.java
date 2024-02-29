@@ -4,6 +4,7 @@
  */
 package com.mycompany.baitapnhom1.view;
 
+import com.mycompany.baitapnhom1.entity.BookCategory;
 import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
@@ -12,6 +13,9 @@ import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,13 +26,14 @@ public class BookManagementFrame extends javax.swing.JFrame {
     private final BookService bookService;
     private final UserService userService;
     private List<BookEntity> items;
+    private WindowListener windowListener = null;
 
     /**
      * Creates new form BookManagement
      */
-    public BookManagementFrame(BookService bookService,UserService userService) {
+    public BookManagementFrame(BookService bookService, UserService userService) {
         this.bookService = bookService;
-        this.userService=userService;
+        this.userService = userService;
         initComponents();
         initData();
         initRowFunction();
@@ -48,10 +53,10 @@ public class BookManagementFrame extends javax.swing.JFrame {
                 deleteRow(selectedRow);
             }
         });
-        updateItem.addActionListener(e->{
+        updateItem.addActionListener(e -> {
             int selectedRow = tableSach.getSelectedRow();
             if (selectedRow >= 0) {
-
+                showUpdateBookFrame(selectedRow);
             }
         });
 
@@ -67,11 +72,44 @@ public class BookManagementFrame extends javax.swing.JFrame {
                 int rowindex = tableSach.getSelectedRow();
                 if (rowindex < 0)
                     return;
-                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
                     popupMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
         });
+    }
+
+    private void showUpdateBookFrame(int selectedRow) {
+        var book = getBookEntity(selectedRow);
+        UpdateBookFrame updateBookFrame = new UpdateBookFrame(bookService, book);
+        updateBookFrame.setLocationRelativeTo(null);
+        updateBookFrame.setVisible(true);
+        setVisible(false);
+        updateBookFrame.addWindowListener(getWindowListener());
+    }
+
+    private BookEntity getBookEntity(int selectedRow) {
+        var model = tableSach.getModel();
+        var bookId = model.getValueAt(selectedRow, 0).toString();
+        var bookName = model.getValueAt(selectedRow, 1).toString();
+        var author = model.getValueAt(selectedRow, 4).toString();
+        var category = BookCategory.valueOf(model.getValueAt(selectedRow, 5).toString());
+        var publisher = model.getValueAt(selectedRow, 6).toString();
+        var year = model.getValueAt(selectedRow, 7).toString().substring(0, 4);
+        var localDate = LocalDate.of(Integer.parseInt(year), 1, 1);
+        var publishDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        var totalQuantity = Integer.parseInt(model.getValueAt(selectedRow, 2).toString());
+        var availableQuantity = Integer.parseInt(model.getValueAt(selectedRow, 3).toString());
+        return BookEntity.builder()
+                .bookId(bookId)
+                .bookName(bookName)
+                .author(author)
+                .category(category)
+                .publisher(publisher)
+                .publishDate(publishDate)
+                .totalQuantity(totalQuantity)
+                .restQuantity(availableQuantity)
+                .build();
     }
 
 
@@ -91,19 +129,19 @@ public class BookManagementFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tableSach.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][]{
 
-            },
-            new String [] {
-                "Mã sách", "Tên sách", "Số lượng", "Số lượng kho", "Tên tác giả", "Thể Loại", "Nhà xuất bản", "Năm xuất bản"
-            }
+                },
+                new String[]{
+                        "Mã sách", "Tên sách", "Số lượng", "Số lượng kho", "Tên tác giả", "Thể Loại", "Nhà xuất bản", "Năm xuất bản"
+                }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true, true
+            boolean[] canEdit = new boolean[]{
+                    false, false, false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tableSach.getTableHeader().setReorderingAllowed(false);
@@ -146,52 +184,76 @@ public class BookManagementFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 832, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(100, 100, 100)
-                .addComponent(btnadd)
-                .addGap(182, 182, 182)
-                .addComponent(btnsearch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnexit)
-                .addGap(93, 93, 93))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addContainerGap()
+                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 832, Short.MAX_VALUE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(59, 59, 59)
+                                                .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(207, 207, 207)
+                                                .addComponent(btnsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnexit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(49, 49, 49)))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnadd)
-                    .addComponent(btnexit)
-                    .addComponent(btnsearch))
-                .addContainerGap(28, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                        .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnexit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(29, 29, 29))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteRow(int selectedRow) {
-        var model = tableSach.getModel();
-        var bookId = model.getValueAt(selectedRow,0).toString();
-        var bookName= model.getValueAt(selectedRow,1).toString();
-        try{
-            bookService.deleteBookByBookIdAndName(bookId,bookName);
-            initData();
-            JOptionPaneUtil.showMessageDialog("Deleted Successfully",1500,jScrollPane2);
-        }catch (RuntimeException e){
-            JOptionPane.showMessageDialog(
-                    this,
-                    e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
+        int choose = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure to delete this book. This action can not be undo",
+                "Delete",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+        if (choose == JOptionPane.YES_OPTION) {
+            var model = tableSach.getModel();
+            var bookId = model.getValueAt(selectedRow, 0).toString();
+            var bookName = model.getValueAt(selectedRow, 1).toString();
+            try {
+                bookService.deleteBookByBookIdAndName(bookId, bookName);
+                initData();
+                JOptionPaneUtil.showMessageDialog("Deleted Successfully", 1500, jScrollPane2);
+            } catch (RuntimeException e) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
         }
+    }
+
+    private WindowListener getWindowListener() {
+        if (windowListener == null) {
+            windowListener = new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    setVisible(true);
+                    initData();
+                }
+            };
+        }
+        return windowListener;
     }
 
     private void initData() {
@@ -221,7 +283,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tableSachMouseClicked
 
     private void btnsearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsearchActionPerformed
-        // TODO add your handling code here:
+        SearchBookFrame searchBookFrame = new SearchBookFrame();
     }//GEN-LAST:event_btnsearchActionPerformed
 
     private void btnaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaddActionPerformed
@@ -230,13 +292,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
         addBookFrame.setVisible(true);
         setFocusable(false);
         setVisible(false);
-        addBookFrame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                setVisible(true);
-                initData();
-            }
-        });
+        addBookFrame.addWindowListener(getWindowListener());
 
     }//GEN-LAST:event_btnaddActionPerformed
 

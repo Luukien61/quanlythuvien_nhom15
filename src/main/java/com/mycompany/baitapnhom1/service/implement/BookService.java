@@ -110,7 +110,7 @@ public class BookService implements IBookService {
     @Override
     public ResultModel updateBook(BookEntity newBook) {
         try{
-            var existBook = bookRepository.findByBookName(newBook.getBookName());
+            var existBook = bookRepository.findById(newBook.getId()).orElse(null);
             if(existBook!=null){
                 existBook.setBookName(newBook.getBookName());
                 existBook.setBookId(newBook.getBookId());

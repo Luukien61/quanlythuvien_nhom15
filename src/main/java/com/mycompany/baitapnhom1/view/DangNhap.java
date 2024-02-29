@@ -188,7 +188,7 @@ public class DangNhap extends javax.swing.JFrame {
             else{
                 resetForm();
             }
-            JOptionPaneUtil.showMessageDialog(data.getMessage(),1000,null);
+            JOptionPaneUtil.showMessageDialog(data.getMessage(),800,null);
         }else {
             JOptionPane.showMessageDialog(this, "Vui long nhap userName va password");
         }
