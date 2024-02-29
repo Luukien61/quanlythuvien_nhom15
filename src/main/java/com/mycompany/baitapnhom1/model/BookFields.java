@@ -16,4 +16,9 @@ public enum BookFields {
     TOTAL_QUANTITY("Tổng số lượng"),
     AVAILABLE_QUANTITY("Số lượng kho");
     private final String fieldName;
+
+    @Override
+    public String toString() {
+        return this.getFieldName();
+    }
 }

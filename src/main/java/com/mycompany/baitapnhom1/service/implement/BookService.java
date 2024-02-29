@@ -176,10 +176,15 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public List<BookEntity> searchBookByField(String field, String key){
+    public List<BookEntity> searchBookByField(BookFields field, String key){
         List<BookEntity> items = new ArrayList<>();
         switch (field){
-
+            case BOOK_ID -> items.add(this.findBookByBookId(key));
+            case NAME -> items.add(this.findBookByName(key));
+            case CATEGORY -> items.addAll(this.findBooksByCategory(key));
+            case AUTHOR -> items.addAll(this.findBookByAUthor(key));
+            case PUBLISH_DATE -> items.addAll(this.findBooksByTime("1",key));
+            case PUBLISHER -> items.addAll(this.findBooksByPublisher(key));
         }
         return items;
     }

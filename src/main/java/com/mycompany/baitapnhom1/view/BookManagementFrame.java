@@ -41,14 +41,14 @@ public class BookManagementFrame extends javax.swing.JFrame {
     }
 
     private void initSearch() {
-        DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) snpSearch.getModel();
-        var items = new ArrayList<String>();
-        items.add(BookFields.NAME.getFieldName());
-        items.add(BookFields.BOOK_ID.getFieldName());
-        items.add(BookFields.CATEGORY.getFieldName());
-        items.add(BookFields.AUTHOR.getFieldName());
-        items.add(BookFields.PUBLISHER.getFieldName());
-        items.add(BookFields.PUBLISH_DATE.getFieldName());
+        DefaultComboBoxModel<BookFields> model = (DefaultComboBoxModel) snpSearch.getModel();
+        var items = new ArrayList<BookFields>();
+        items.add(BookFields.NAME);
+        items.add(BookFields.BOOK_ID);
+        items.add(BookFields.CATEGORY);
+        items.add(BookFields.AUTHOR);
+        items.add(BookFields.PUBLISHER);
+        items.add(BookFields.PUBLISH_DATE);
         items.forEach(model::addElement);
     }
 
@@ -334,8 +334,8 @@ public class BookManagementFrame extends javax.swing.JFrame {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         var key = txtSearch.getText();
         if (!key.isBlank()) {
-            var field = (String) snpSearch.getModel().getSelectedItem();
-            if (field.equals("Năm xuất bản")) {
+            var field = (BookFields) snpSearch.getSelectedItem();
+            if (field == BookFields.PUBLISH_DATE) {
                 try {
                     var year = Integer.parseInt(key);
 

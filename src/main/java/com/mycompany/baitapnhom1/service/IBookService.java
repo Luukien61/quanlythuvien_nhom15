@@ -1,6 +1,7 @@
 package com.mycompany.baitapnhom1.service;
 
 import com.mycompany.baitapnhom1.entity.BookEntity;
+import com.mycompany.baitapnhom1.model.BookFields;
 import com.mycompany.baitapnhom1.model.ResultModel;
 
 import java.util.List;
@@ -18,5 +19,5 @@ public interface IBookService {
     List<BookEntity> saveListBooks(List<BookEntity> items);
     ResultModel updateBook(BookEntity newBook);
     void deleteBookByBookIdAndName(String bookId, String bookName);
-    List<BookEntity> searchBookByField(String field, String key);
+    List<BookEntity> searchBookByField(BookFields field, String key);
 }
