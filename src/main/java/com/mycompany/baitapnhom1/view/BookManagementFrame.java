@@ -4,8 +4,8 @@
  */
 package com.mycompany.baitapnhom1.view;
 
-import com.mycompany.baitapnhom1.entity.BookCategory;
 import com.mycompany.baitapnhom1.entity.BookEntity;
+import com.mycompany.baitapnhom1.model.BookFields;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
 import com.mycompany.baitapnhom1.util.AppUtil;
@@ -14,9 +14,7 @@ import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,7 +36,20 @@ public class BookManagementFrame extends javax.swing.JFrame {
         initComponents();
         initData();
         initRowFunction();
+        initSearch();
         setLocationRelativeTo(null);
+    }
+
+    private void initSearch() {
+        DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) snpSearch.getModel();
+        var items = new ArrayList<String>();
+        items.add(BookFields.NAME.getFieldName());
+        items.add(BookFields.BOOK_ID.getFieldName());
+        items.add(BookFields.CATEGORY.getFieldName());
+        items.add(BookFields.AUTHOR.getFieldName());
+        items.add(BookFields.PUBLISHER.getFieldName());
+        items.add(BookFields.PUBLISH_DATE.getFieldName());
+        items.forEach(model::addElement);
     }
 
     private void initRowFunction() {
@@ -82,7 +93,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
 
     private void showUpdateBookFrame(int selectedRow) {
         var book = getBookEntity(selectedRow);
-        if(book!=null){
+        if (book != null) {
             UpdateBookFrame updateBookFrame = new UpdateBookFrame(bookService, book);
             updateBookFrame.setLocationRelativeTo(null);
             updateBookFrame.setVisible(true);
@@ -115,9 +126,12 @@ public class BookManagementFrame extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableSach = new javax.swing.JTable();
-        btnadd = new javax.swing.JButton();
-        btnexit = new javax.swing.JButton();
-        btnsearch = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        snpSearch = new javax.swing.JComboBox<>();
+        txtSearch = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
+        btnExist = new javax.swing.JButton();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -155,24 +169,35 @@ public class BookManagementFrame extends javax.swing.JFrame {
             tableSach.getColumnModel().getColumn(7).setResizable(false);
         }
 
-        btnadd.setText("Thêm mới");
-        btnadd.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel1.setText("Quản lý sách");
+
+        snpSearch.setBackground(new java.awt.Color(255, 255, 255));
+        snpSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnaddActionPerformed(evt);
+                snpSearchActionPerformed(evt);
             }
         });
 
-        btnexit.setText("Thoát");
-        btnexit.addActionListener(new java.awt.event.ActionListener() {
+        btnSearch.setText("Tìm kiếm");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnexitActionPerformed(evt);
+                btnSearchActionPerformed(evt);
             }
         });
 
-        btnsearch.setText("Tìm kiếm");
-        btnsearch.addActionListener(new java.awt.event.ActionListener() {
+        btnAdd.setText("Thêm mới");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnsearchActionPerformed(evt);
+                btnAddActionPerformed(evt);
+            }
+        });
+
+        btnExist.setText("Thoát");
+        btnExist.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExistActionPerformed(evt);
             }
         });
 
@@ -184,28 +209,43 @@ public class BookManagementFrame extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addContainerGap()
-                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 832, Short.MAX_VALUE))
+                                                .addComponent(jScrollPane2))
                                         .addGroup(layout.createSequentialGroup()
-                                                .addGap(59, 59, 59)
-                                                .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(207, 207, 207)
-                                                .addComponent(btnsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(btnexit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(49, 49, 49)))
+                                                .addGap(371, 371, 371)
+                                                .addComponent(jLabel1)
+                                                .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(105, 105, 105)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(snpSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(48, 48, 48)
+                                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(105, 105, 105)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnExist, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(99, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                                        .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnexit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(29, 29, 29))
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(42, 42, 42)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(snpSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnExist, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(58, 58, 58))
         );
 
         pack();
@@ -278,23 +318,42 @@ public class BookManagementFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tableSachMouseClicked
 
-    private void btnsearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsearchActionPerformed
-        SearchBookFrame searchBookFrame = new SearchBookFrame();
-    }//GEN-LAST:event_btnsearchActionPerformed
-
-    private void btnaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         AddBookFrame addBookFrame = new AddBookFrame(bookService);
         addBookFrame.setLocationRelativeTo(null);
         addBookFrame.setVisible(true);
         setFocusable(false);
         setVisible(false);
         addBookFrame.addWindowListener(getWindowListener());
+    }//GEN-LAST:event_btnAddActionPerformed
 
-    }//GEN-LAST:event_btnaddActionPerformed
-
-    private void btnexitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnexitActionPerformed
+    private void btnExistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExistActionPerformed
         dispose();
-    }//GEN-LAST:event_btnexitActionPerformed
+    }
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        var key = txtSearch.getText();
+        if (!key.isBlank()) {
+            var field = (String) snpSearch.getModel().getSelectedItem();
+            if (field.equals("Năm xuất bản")) {
+                try {
+                    var year = Integer.parseInt(key);
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Please type the year correctly",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        }
+    }
+
+    private void snpSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_snpSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_snpSearchActionPerformed
 
     /**
      * @param args the command line arguments
@@ -333,12 +392,15 @@ public class BookManagementFrame extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnadd;
-    private javax.swing.JButton btnexit;
-    private javax.swing.JButton btnsearch;
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnExist;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JComboBox<String> snpSearch;
     private javax.swing.JTable tableSach;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

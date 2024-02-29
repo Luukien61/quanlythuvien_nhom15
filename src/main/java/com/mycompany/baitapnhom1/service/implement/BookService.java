@@ -2,6 +2,7 @@ package com.mycompany.baitapnhom1.service.implement;
 
 import com.mycompany.baitapnhom1.entity.BookCategory;
 import com.mycompany.baitapnhom1.entity.BookEntity;
+import com.mycompany.baitapnhom1.model.BookFields;
 import com.mycompany.baitapnhom1.model.ResultModel;
 import com.mycompany.baitapnhom1.repository.BookRepository;
 import com.mycompany.baitapnhom1.service.IBookService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class BookService implements IBookService {
     @Override
     public BookEntity findBookByName(String name) {
         try{
-            return  bookRepository.findByBookName(name);
+            return  bookRepository.findByBookName(name.trim());
         }catch (Exception e){
             throw new RuntimeException("An error occurs when trying to fetch books");
         }
@@ -39,7 +41,7 @@ public class BookService implements IBookService {
     @Override
     public BookEntity findBookById(String id) {
         try{
-            return bookRepository.findByBookId(id);
+            return bookRepository.findByBookId(id.trim());
         }catch (Exception e){
             throw new RuntimeException("An error occurs when trying to fetch books");
 
@@ -59,6 +61,7 @@ public class BookService implements IBookService {
     @Override
     public List<BookEntity> findBooksByTime(String month, String year) {
         try{
+            year=year.trim();
             LocalDate firstDate,secondDate;
             if(month==null){
                 firstDate= LocalDate.of(Integer.parseInt(year),1,1);
@@ -67,6 +70,7 @@ public class BookService implements IBookService {
                 var date2 = Date.from(secondDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 return bookRepository.findAllByPublishDate(date1,date2);
             }else {
+                month=month.trim();
                 firstDate= LocalDate.of(Integer.parseInt(year),Integer.parseInt(month),1);
                 var date1 = Date.from(firstDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 return bookRepository.findAllByPublishDate(date1);
@@ -90,7 +94,7 @@ public class BookService implements IBookService {
     @Override
     public ResultModel saveNewBook(BookEntity newBook) {
         try{
-            var existBook = bookRepository.findByBookName(newBook.getBookName());
+            var existBook = bookRepository.findByBookName(newBook.getBookName().trim());
             if(existBook!=null){
                 return ResultModel.builder()
                         .data(null)
@@ -144,7 +148,7 @@ public class BookService implements IBookService {
     @Override
     public void deleteBookByBookIdAndName(String bookId, String bookName) {
         try{
-            var book = bookRepository.findByBookIdAndBookName(bookId,bookName);
+            var book = bookRepository.findByBookIdAndBookName(bookId.trim(),bookName.trim());
             bookRepository.delete(book);
         }catch (Exception e){
             throw new RuntimeException("An error occurs when trying to delete this book");
@@ -159,5 +163,24 @@ public class BookService implements IBookService {
             throw new RuntimeException("An error occurs when trying to fetch books");
 
         }
+    }
+
+    @Override
+    public List<BookEntity> findBookByAUthor(String author) {
+        try{
+            return bookRepository.findAllByAuthor(author.trim());
+        }catch (Exception e){
+            throw new RuntimeException("An error occurs when trying to fetch books");
+
+        }
+    }
+
+    @Override
+    public List<BookEntity> searchBookByField(String field, String key){
+        List<BookEntity> items = new ArrayList<>();
+        switch (field){
+
+        }
+        return items;
     }
 }

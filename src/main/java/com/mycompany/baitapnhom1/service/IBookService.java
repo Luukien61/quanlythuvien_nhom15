@@ -10,6 +10,7 @@ public interface IBookService {
     BookEntity findBookByName(String name);
     BookEntity findBookByBookId(String bookId);
     BookEntity findBookById(String id);
+    List<BookEntity> findBookByAUthor(String author);
     List<BookEntity> findBooksByPublisher(String publisher);
     List<BookEntity> findBooksByTime(String month, String year);
     List<BookEntity> findBooksByCategory(String category);
@@ -17,4 +18,5 @@ public interface IBookService {
     List<BookEntity> saveListBooks(List<BookEntity> items);
     ResultModel updateBook(BookEntity newBook);
     void deleteBookByBookIdAndName(String bookId, String bookName);
+    List<BookEntity> searchBookByField(String field, String key);
 }
