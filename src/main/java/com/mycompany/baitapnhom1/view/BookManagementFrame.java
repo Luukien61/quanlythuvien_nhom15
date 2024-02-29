@@ -8,6 +8,7 @@ import com.mycompany.baitapnhom1.entity.BookCategory;
 import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
+import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 
 import javax.swing.*;
@@ -81,35 +82,29 @@ public class BookManagementFrame extends javax.swing.JFrame {
 
     private void showUpdateBookFrame(int selectedRow) {
         var book = getBookEntity(selectedRow);
-        UpdateBookFrame updateBookFrame = new UpdateBookFrame(bookService, book);
-        updateBookFrame.setLocationRelativeTo(null);
-        updateBookFrame.setVisible(true);
-        setVisible(false);
-        updateBookFrame.addWindowListener(getWindowListener());
+        if(book!=null){
+            UpdateBookFrame updateBookFrame = new UpdateBookFrame(bookService, book);
+            updateBookFrame.setLocationRelativeTo(null);
+            updateBookFrame.setVisible(true);
+            setVisible(false);
+            updateBookFrame.addWindowListener(getWindowListener());
+        }
     }
 
     private BookEntity getBookEntity(int selectedRow) {
         var model = tableSach.getModel();
         var bookId = model.getValueAt(selectedRow, 0).toString();
-        var bookName = model.getValueAt(selectedRow, 1).toString();
-        var author = model.getValueAt(selectedRow, 4).toString();
-        var category = BookCategory.valueOf(model.getValueAt(selectedRow, 5).toString());
-        var publisher = model.getValueAt(selectedRow, 6).toString();
-        var year = model.getValueAt(selectedRow, 7).toString().substring(0, 4);
-        var localDate = LocalDate.of(Integer.parseInt(year), 1, 1);
-        var publishDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        var totalQuantity = Integer.parseInt(model.getValueAt(selectedRow, 2).toString());
-        var availableQuantity = Integer.parseInt(model.getValueAt(selectedRow, 3).toString());
-        return BookEntity.builder()
-                .bookId(bookId)
-                .bookName(bookName)
-                .author(author)
-                .category(category)
-                .publisher(publisher)
-                .publishDate(publishDate)
-                .totalQuantity(totalQuantity)
-                .restQuantity(availableQuantity)
-                .build();
+        BookEntity book = null;
+        try {
+            book = bookService.findBookByBookId(bookId);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        return book;
     }
 
 
@@ -262,10 +257,11 @@ public class BookManagementFrame extends javax.swing.JFrame {
             var defaultTableModel = (DefaultTableModel) tableSach.getModel();
             defaultTableModel.setRowCount(0);
             items.forEach((book) -> {
+                var date = book.getPublishDate();
                 var data = new Object[]{
                         book.getBookId(), book.getBookName(), book.getTotalQuantity(),
                         book.getRestQuantity(), book.getAuthor(), book.getCategory(),
-                        book.getPublisher(), book.getPublishDate()
+                        book.getPublisher(), AppUtil.getPublishDateString(date)
                 };
                 defaultTableModel.addRow(data);
             });

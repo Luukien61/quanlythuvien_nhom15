@@ -49,7 +49,7 @@ public class BookService implements IBookService {
     @Override
     public List<BookEntity> findBooksByPublisher(String publisher) {
         try{
-            return bookRepository.findAllByPublisher(publisher);
+            return bookRepository.findAllByPublisher(publisher.trim());
         }catch (Exception e){
             throw new RuntimeException("An error occurs when trying to fetch books");
 
@@ -148,6 +148,16 @@ public class BookService implements IBookService {
             bookRepository.delete(book);
         }catch (Exception e){
             throw new RuntimeException("An error occurs when trying to delete this book");
+        }
+    }
+
+    @Override
+    public BookEntity findBookByBookId(String bookId) {
+        try{
+            return bookRepository.findByBookId(bookId.trim());
+        }catch (Exception e){
+            throw new RuntimeException("An error occurs when trying to fetch books");
+
         }
     }
 }

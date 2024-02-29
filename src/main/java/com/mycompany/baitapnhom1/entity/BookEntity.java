@@ -13,8 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class BookEntity extends BaseEntity {
-
+    @Column(unique = true)
     private String bookId;
+    @Column(unique = true)
     private String bookName;
     private String author;
     private String publisher;

@@ -15,16 +15,11 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
     List<BookEntity> findAll();
     @Query(value = "select * from book_entity where id= :id",nativeQuery = true)
     BookEntity findById(@Param("id") String id);
-
     List<BookEntity> findAllByAuthor(String author);
     List<BookEntity> findAllByCategory(BookCategory category);
-
     BookEntity findByBookId(String bookId);
-
     List<BookEntity> findAllByPublisher(String publisher);
-
     List<BookEntity> findAllByPublishDate(Date date);
-
     BookEntity findByBookName(String name);
     BookEntity findByBookIdAndBookName(String id, String name);
     @Query(value = "select * from book_entity where publish_date between :firstdate and :seconddate",nativeQuery = true)

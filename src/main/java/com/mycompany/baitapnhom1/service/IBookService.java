@@ -8,6 +8,7 @@ import java.util.List;
 public interface IBookService {
     List<BookEntity> findAllBook();
     BookEntity findBookByName(String name);
+    BookEntity findBookByBookId(String bookId);
     BookEntity findBookById(String id);
     List<BookEntity> findBooksByPublisher(String publisher);
     List<BookEntity> findBooksByTime(String month, String year);

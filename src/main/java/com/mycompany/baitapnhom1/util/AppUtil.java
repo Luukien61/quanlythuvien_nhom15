@@ -12,14 +12,16 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 public class AppUtil {
     @Setter
     @Getter
     private static UserEntity currentUser = null;
-    private static KeyAdapter keyAdapter=null;
-    private static Document document=null;
+    private static KeyAdapter keyAdapter = null;
+    private static Document document = null;
 
     public static List<BookEntity> initialBooks() {
         List<BookEntity> items = new ArrayList<>();
@@ -56,9 +58,10 @@ public class AppUtil {
         }
         return keyAdapter;
     }
-    public static Document getNumberRequireCharacter(int num){
-        if(document==null){
-            document=new PlainDocument() {
+
+    public static Document getNumberRequireCharacter(int num) {
+        if (document == null) {
+            document = new PlainDocument() {
                 @Override
                 public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
                     if (getLength() + str.length() <= num) {
@@ -68,5 +71,15 @@ public class AppUtil {
             };
         }
         return document;
+    }
+
+    public static String getPublishDateString(Date date) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return String.valueOf(localDate.getYear());
+    }
+
+    public static Date getPublishDate(int year) {
+        LocalDate localDate = LocalDate.of(year,1,1);
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }

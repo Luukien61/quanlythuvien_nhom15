@@ -39,14 +39,12 @@ public class UpdateBookFrame extends javax.swing.JFrame {
 
     private void initBookData() {
         Date date = book.getPublishDate();
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        int year = localDate.getYear();
         txtBookId.setText(book.getBookId());
         txtBookName.setText(book.getBookName());
         txtAuthor.setText(book.getAuthor());
         txtCategory.setSelectedIndex(book.getCategory().getIndex());
         txtPublisher.setText(book.getPublisher());
-        txtPublishDate.setText(String.valueOf(year));
+        txtPublishDate.setText(AppUtil.getPublishDateString(date));
         txtQuantity.setText(String.valueOf(book.getTotalQuantity()));
         txtRestQuantity.setText(String.valueOf(book.getRestQuantity()));
     }
@@ -245,7 +243,7 @@ public class UpdateBookFrame extends javax.swing.JFrame {
         book.setTotalQuantity(quantity);
         book.setRestQuantity(availableQuantity);
         try {
-            var result = bookService.saveNewBook(book);
+            var result = bookService.updateBook(book);
             JOptionPaneUtil.showMessageDialog(result.getMessage(), 800, null);
             dispose();
         } catch (RuntimeException e) {

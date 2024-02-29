@@ -209,9 +209,8 @@ public class AddBookFrame extends javax.swing.JFrame {
         String author = txtAuthor.getText();
         BookCategory bookCategory = (BookCategory) txtCategory.getSelectedItem();
         String publisher = txtPublisher.getText();
-        int publishDate = Integer.parseInt(txtPublishDate.getText());
-        LocalDate localDate = LocalDate.of(publishDate, 1, 1);
-        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        int year = Integer.parseInt(txtPublishDate.getText());
+        Date date= AppUtil.getPublishDate(year);
         int quantity = Integer.parseInt(txtQuantity.getText());
         BookEntity book = BookEntity.builder()
                 .bookId(bookId)
@@ -225,8 +224,8 @@ public class AddBookFrame extends javax.swing.JFrame {
                 .build();
         try {
             var result = bookService.saveNewBook(book);
-            JOptionPaneUtil.showMessageDialog(result.getMessage(), 1500, this);
             clearText();
+            JOptionPaneUtil.showMessageDialog(result.getMessage(), 500, this);
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(
                     this,
