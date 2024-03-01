@@ -4,6 +4,7 @@
 
 package com.mycompany.baitapnhom1;
 
+import com.mycompany.baitapnhom1.api.GetUserController;
 import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.repository.UserRepository;
@@ -33,7 +34,7 @@ public class Baitapnhom1 {
         var context = app.run(args);
         UserService userService = context.getBean(UserService.class);
         BookService bookService = context.getBean(BookService.class);
-        initData(context);
+//        initData(context);
         DangNhap view = new DangNhap(userService,bookService);
         view.setVisible(true);
     }
@@ -41,15 +42,15 @@ public class Baitapnhom1 {
     private static void initData(ConfigurableApplicationContext context) {
         UserRepository userRepository = context.getBean(UserRepository.class);
         BookService bookService = context.getBean(BookService.class);
-//        var result = userRepository.save(UserEntity.builder()
-//                .userName("kien")
-//                .password("123456")
-//                .role(Role.ADMIN)
-//                .personalId("CT060319")
-//                .build());
-//        userRepository.save(result);
-//        var item = AppUtil.initialBooks();
-//        bookService.saveListBooks(item);
+        var result = userRepository.save(UserEntity.builder()
+                .userName("kien")
+                .password("123456")
+                .role(Role.ADMIN)
+                .personalId("CT060319")
+                .build());
+        userRepository.save(result);
+        var item = AppUtil.initialBooks();
+        bookService.saveListBooks(item);
     }
 
 }

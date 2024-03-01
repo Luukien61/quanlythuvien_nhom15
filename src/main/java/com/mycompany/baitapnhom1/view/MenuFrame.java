@@ -174,9 +174,16 @@ public class MenuFrame extends javax.swing.JFrame {
 
     private void btnDGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDGActionPerformed
         // TODO add your handling code here:
-        QuanLyDocGia qldg = new QuanLyDocGia();
-        qldg.setVisible(true);
+        QuanLyDocGia readerFrame = new QuanLyDocGia(userService);
+        readerFrame.setVisible(true);
         setFocusable(false);
+        setVisible(false);
+        readerFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                setVisible(true);
+            }
+        });
 
     }//GEN-LAST:event_btnDGActionPerformed
 

@@ -1,10 +1,13 @@
 package com.mycompany.baitapnhom1.service.implement;
 
+import com.mycompany.baitapnhom1.api.GetUserController;
+import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.repository.UserRepository;
 import com.mycompany.baitapnhom1.service.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -38,7 +41,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserEntity finduserById(String id) throws SQLException {
+    public UserEntity finduserByPersonalId(String id) throws SQLException {
         try {
             return userRepository.findByPersonalId(id).orElse(null);
         } catch (Exception e) {
@@ -92,5 +95,27 @@ public class UserService implements IUserService {
         }catch (Exception e){
             throw new SQLException("Sorry, an error occurs when finding the user");
         }
+    }
+
+    @Override
+    public List<UserEntity> findAllUserByRole(Role role) {
+        try{
+            return userRepository.findAllByRole(role);
+        }catch (Exception e){
+            throw new RuntimeException("Sorry, an error occurs when fetching users");
+        }
+    }
+
+    @Transactional
+    public List<UserEntity> fetchAllUser(){
+        List<UserEntity> users =GetUserController.getUser();
+        users.forEach(user -> {
+            try {
+                saveUser(user);
+            } catch (SQLException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        });
+        return findAllUser();
     }
 }

@@ -10,7 +10,6 @@ public enum BookCategory {
     MATHEMATICA(1),
     TEXTBOOK(2);
     private final int index;
-
     @Override
     public String toString() {
         return this.name();
