@@ -34,10 +34,10 @@ public class BookManagementFrame extends javax.swing.JFrame {
         this.bookService = bookService;
         this.userService = userService;
         initComponents();
-        initData();
         initRowFunction();
         initSearch();
         setLocationRelativeTo(null);
+        initData();
     }
 
     private void initSearch() {
@@ -132,6 +132,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
         btnSearch = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
         btnExist = new javax.swing.JButton();
+        btnFetchAll = new javax.swing.JButton();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -180,6 +181,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
             }
         });
 
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Search.png"))); // NOI18N
         btnSearch.setText("Tìm kiếm");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -187,6 +189,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
             }
         });
 
+        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Add.png"))); // NOI18N
         btnAdd.setText("Thêm mới");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -194,10 +197,19 @@ public class BookManagementFrame extends javax.swing.JFrame {
             }
         });
 
+        btnExist.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Exit.png"))); // NOI18N
         btnExist.setText("Thoát");
         btnExist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExistActionPerformed(evt);
+            }
+        });
+
+        btnFetchAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Refresh.png"))); // NOI18N
+        btnFetchAll.setText("Làm mới");
+        btnFetchAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFetchAllActionPerformed(evt);
             }
         });
 
@@ -218,16 +230,19 @@ public class BookManagementFrame extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(105, 105, 105)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addComponent(snpSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(139, 139, 139)
+                                                .addComponent(btnFetchAll, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(snpSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(48, 48, 48)
                                                 .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(105, 105, 105)
+                                .addGap(93, 93, 93)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnExist, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(99, Short.MAX_VALUE))
+                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnExist, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(111, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -244,7 +259,8 @@ public class BookManagementFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnExist, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(btnExist, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnFetchAll, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(58, 58, 58))
         );
 
@@ -291,9 +307,8 @@ public class BookManagementFrame extends javax.swing.JFrame {
         return windowListener;
     }
 
-    private void initData() {
+    private void initData(List<BookEntity> items) {
         try {
-            items = bookService.findAllBook();
             var defaultTableModel = (DefaultTableModel) tableSach.getModel();
             defaultTableModel.setRowCount(0);
             items.forEach((book) -> {
@@ -305,10 +320,20 @@ public class BookManagementFrame extends javax.swing.JFrame {
                 };
                 defaultTableModel.addRow(data);
             });
-
+            clearText();
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void clearText() {
+        txtSearch.setText("");
+        snpSearch.setSelectedIndex(0);
+    }
+
+    private void initData() {
+        items = bookService.findAllBook();
+        initData(items);
     }
 
     private void tableSachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableSachMouseClicked
@@ -327,18 +352,19 @@ public class BookManagementFrame extends javax.swing.JFrame {
         addBookFrame.addWindowListener(getWindowListener());
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnExistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExistActionPerformed
+    private void btnExistActionPerformed(java.awt.event.ActionEvent evt) {
         dispose();
     }
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {
         var key = txtSearch.getText();
-        if (!key.isBlank()) {
-            var field = (BookFields) snpSearch.getSelectedItem();
+        var field = (BookFields) snpSearch.getSelectedItem();
+        if (!key.isBlank() && field != null) {
+            List<BookEntity> items = new ArrayList<>();
             if (field == BookFields.PUBLISH_DATE) {
                 try {
                     var year = Integer.parseInt(key);
-
+                    items.addAll(bookService.findBookByYear(year));
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(
                             null,
@@ -347,13 +373,41 @@ public class BookManagementFrame extends javax.swing.JFrame {
                             JOptionPane.ERROR_MESSAGE
                     );
                 }
+            } else {
+                try {
+                    var books = bookService.searchBookByField(field, key);
+                    if (books.getFirst() != null) {
+                        items.addAll(books);
+                    }
+                    if (!items.isEmpty()) {
+                        initData(items);
+                    } else throw new RuntimeException("Không tìm thấy sách");
+                } catch (RuntimeException e) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Không tìm thấy sách",
+                            "Thông báo",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Please fill require fields",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+
         }
     }
 
     private void snpSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_snpSearchActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_snpSearchActionPerformed
+
+    private void btnFetchAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFetchAllActionPerformed
+        initData();
+    }//GEN-LAST:event_btnFetchAllActionPerformed
 
     /**
      * @param args the command line arguments
@@ -394,6 +448,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnExist;
+    private javax.swing.JButton btnFetchAll;
     private javax.swing.JButton btnSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuItem jMenuItem1;

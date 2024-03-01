@@ -21,6 +21,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
     List<BookEntity> findAllByPublisher(String publisher);
     List<BookEntity> findAllByPublishDate(Date date);
     BookEntity findByBookName(String name);
+    List<BookEntity> findByPublishDate(Date date);
     BookEntity findByBookIdAndBookName(String id, String name);
     @Query(value = "select * from book_entity where publish_date between :firstdate and :seconddate",nativeQuery = true)
     List<BookEntity> findAllByPublishDate(@Param("firstdate") Date firstDate, @Param("seconddate") Date secondDate);

@@ -19,5 +19,6 @@ public interface IBookService {
     List<BookEntity> saveListBooks(List<BookEntity> items);
     ResultModel updateBook(BookEntity newBook);
     void deleteBookByBookIdAndName(String bookId, String bookName);
+    List<BookEntity> findBookByYear(int year);
     List<BookEntity> searchBookByField(BookFields field, String key);
 }
