@@ -5,13 +5,17 @@ import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
+import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -81,5 +85,17 @@ public class AppUtil {
     public static Date getPublishDate(int year) {
         LocalDate localDate = LocalDate.of(year,1,1);
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static void setUpWindowListener(JFrame currentFrame, JFrame parentFrame,@Nullable CustomCallBackFunction function){
+        currentFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                parentFrame.setVisible(true);
+                if(function!=null){
+                    function.call();
+                }
+            }
+        });
     }
 }

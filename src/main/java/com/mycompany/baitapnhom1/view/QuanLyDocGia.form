@@ -40,7 +40,7 @@
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="165" max="-2" attributes="0"/>
-              <Component id="btnFetch" min="-2" pref="100" max="-2" attributes="0"/>
+              <Component id="btnAction" min="-2" pref="100" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
               <Component id="btnExit" min="-2" pref="100" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="170" max="-2" attributes="0"/>
@@ -61,7 +61,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnFetch" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Component id="btnAction" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                           <Component id="btnExit" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
@@ -125,7 +125,7 @@
         <Property name="text" type="java.lang.String" value="Qu&#x1ea3;n l&#xfd; b&#x1ea1;n &#x111;&#x1ecd;c"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="btnFetch">
+    <Component class="javax.swing.JButton" name="btnAction">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/image/Documents.png"/>
@@ -133,7 +133,7 @@
         <Property name="text" type="java.lang.String" value="Fetch"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFetchActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActionActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnExit">

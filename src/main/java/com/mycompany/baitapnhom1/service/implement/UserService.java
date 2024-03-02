@@ -18,16 +18,14 @@ public class UserService implements IUserService {
     private UserRepository userRepository;
 
     @Override
-    public boolean saveUser(UserEntity user) throws SQLException {
+    public void saveUser(UserEntity user) throws SQLException {
         try {
             var existUser = userRepository.findByPersonalId(user.getPersonalId());
             if (existUser.isPresent()) {
-                return false;
-            }
-            userRepository.save(user);
-            return true;
+                throw new IllegalArgumentException("The user already exist");
+            } else userRepository.save(user);
         } catch (Exception e) {
-            throw new SQLException("Sorry, an error occurs when save user");
+            throw new SQLException(e.getMessage());
         }
     }
 
@@ -41,7 +39,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserEntity finduserByPersonalId(String id) throws SQLException {
+    public UserEntity findUserByPersonalId(String id) throws SQLException {
         try {
             return userRepository.findByPersonalId(id).orElse(null);
         } catch (Exception e) {
@@ -60,9 +58,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean updateUser(UserEntity newUser) throws SQLException {
+    public void updateUser(UserEntity newUser, String id) throws SQLException {
         try {
-            var existUser = userRepository.findByPersonalId(newUser.getPersonalId());
+            var existUser = userRepository.findByPersonalId(id);
             if (existUser.isPresent()) {
                 var user = existUser.get();
                 user.setUserName(newUser.getUserName());
@@ -70,7 +68,6 @@ public class UserService implements IUserService {
                 user.setPersonalId(newUser.getPersonalId());
                 user.setRole(newUser.getRole());
                 userRepository.save(user);
-                return true;
             } else {
                 throw new SQLException("The User doesn't exist ");
             }
@@ -89,26 +86,29 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserEntity findUserByUserNameAndPassword(String userName, String password) throws SQLException {
-        try{
-            return userRepository.findByUserNameAndPassword(userName,password).orElse(null);
-        }catch (Exception e){
+    public UserEntity findUserByUserIdAndPassword(String id, String password) throws SQLException {
+        try {
+            return userRepository.findByPersonalIdAndPassword(id.toUpperCase(), password).orElse(null);
+        } catch (Exception e) {
             throw new SQLException("Sorry, an error occurs when finding the user");
         }
     }
 
+
+
     @Override
     public List<UserEntity> findAllUserByRole(Role role) {
-        try{
+        try {
             return userRepository.findAllByRole(role);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Sorry, an error occurs when fetching users");
         }
     }
 
+    @Override
     @Transactional
-    public List<UserEntity> fetchAllUser(){
-        List<UserEntity> users =GetUserController.getUser();
+    public List<UserEntity> fetchAllUser(Role role) {
+        List<UserEntity> users = GetUserController.getUser();
         users.forEach(user -> {
             try {
                 saveUser(user);
@@ -116,6 +116,6 @@ public class UserService implements IUserService {
                 throw new RuntimeException(e.getMessage());
             }
         });
-        return findAllUser();
+        return findAllUserByRole(Role.USER);
     }
 }

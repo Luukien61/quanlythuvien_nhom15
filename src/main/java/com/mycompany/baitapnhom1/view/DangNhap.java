@@ -9,19 +9,12 @@ import javax.swing.*;
 import com.mycompany.baitapnhom1.Baitapnhom1;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.model.ResultModel;
-import com.mycompany.baitapnhom1.model.UserList;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
 import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -174,11 +167,11 @@ public class DangNhap extends javax.swing.JFrame {
     }
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {
-        String username = txtTK.getText().trim();
+        String id = txtTK.getText().trim();
         String pass = new String(txtMK.getPassword());
         // TODO add your handling code here:
-        if(!username.isEmpty()&& !pass.isEmpty()){
-            var data = checkUser(username,pass);
+        if(!id.isEmpty()&& !pass.isEmpty()){
+            var data = checkUser(id,pass);
             if(data.getData()!=null){
                 AppUtil.setCurrentUser((UserEntity) data.getData());
                 MenuFrame main = new MenuFrame(userService,bookService);
@@ -194,9 +187,9 @@ public class DangNhap extends javax.swing.JFrame {
         }
     }
 
-    private ResultModel checkUser(String username, String pass) {
+    private ResultModel checkUser(String id, String pass) {
         try{
-            UserEntity user = userService.findUserByUserNameAndPassword(username,pass);
+            UserEntity user = userService.findUserByUserIdAndPassword(id,pass);
             if(user!=null){
                 return new ResultModel(user,"Đăng nhập thành công");
             }else return new ResultModel(null,"Tên khoản hoặc mật khẩu không đúng. Vui lòng nhập lại");

@@ -22,15 +22,14 @@ public class MenuFrame extends javax.swing.JFrame {
      */
     private final UserService userService;
     private final BookService bookService;
-    private UserEntity currentuser;
+    private UserEntity currentUser;
 
     public MenuFrame(UserService userService, BookService bookService) {
-        initComponents();
-        setLocationRelativeTo(null);
         this.bookService = bookService;
         this.userService = userService;
+        initComponents();
+        setLocationRelativeTo(null);
         clearFocus();
-
     }
 
     private void clearFocus() {
@@ -39,6 +38,9 @@ public class MenuFrame extends javax.swing.JFrame {
         btnMTra.setFocusable(false);
         btnThongKe.setFocusable(false);
         btnLogout.setFocusable(false);
+        if(currentUser.getRole()==Role.ADMIN){
+            btnDG.setText("Nhân viên");
+        }
     }
 
     /**
@@ -49,7 +51,7 @@ public class MenuFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        currentuser = AppUtil.getCurrentUser();
+        currentUser = AppUtil.getCurrentUser();
         btnSach = new javax.swing.JButton();
         btnMTra = new javax.swing.JButton();
         btnDG = new javax.swing.JButton();
@@ -110,8 +112,8 @@ public class MenuFrame extends javax.swing.JFrame {
         txtName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         txtRole.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txtName.setText(currentuser.getUserName());
-        Role role = currentuser.getRole();
+        txtName.setText(currentUser.getUserName());
+        Role role = currentUser.getRole();
         role = role != null ? role : Role.USER;
         txtRole.setText(role.toString());
 

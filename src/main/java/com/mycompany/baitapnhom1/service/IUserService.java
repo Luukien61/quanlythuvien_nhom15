@@ -7,13 +7,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface IUserService {
-    boolean saveUser(UserEntity user) throws SQLException;
+    void saveUser(UserEntity user) throws SQLException;
     UserEntity findUserByName(String userName) throws SQLException;
-    public List<UserEntity> fetchAllUser();
-    UserEntity finduserByPersonalId(String id) throws SQLException;
+    public List<UserEntity> fetchAllUser(Role role);
+    UserEntity findUserByPersonalId(String id) throws SQLException;
     boolean deleteUser(UserEntity user);
-    boolean updateUser(UserEntity newUser) throws SQLException;
+    void updateUser(UserEntity newUser, String id) throws SQLException;
     List<UserEntity> findAllUser();
     List<UserEntity> findAllUserByRole(Role role);
-    UserEntity findUserByUserNameAndPassword(String userName, String password) throws SQLException;
+    UserEntity findUserByUserIdAndPassword(String id, String password) throws SQLException;
+
 }

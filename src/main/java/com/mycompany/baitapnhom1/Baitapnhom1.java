@@ -19,6 +19,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.sql.SQLException;
+
 /**
  * @author kienl
  */
@@ -34,21 +36,43 @@ public class Baitapnhom1 {
         var context = app.run(args);
         UserService userService = context.getBean(UserService.class);
         BookService bookService = context.getBean(BookService.class);
-//        initData(context);
-        DangNhap view = new DangNhap(userService,bookService);
+        //initData(context);
+        DangNhap view = new DangNhap(userService, bookService);
         view.setVisible(true);
     }
 
     private static void initData(ConfigurableApplicationContext context) {
         UserRepository userRepository = context.getBean(UserRepository.class);
+        UserService userService = context.getBean(UserService.class);
         BookService bookService = context.getBean(BookService.class);
-        var result = userRepository.save(UserEntity.builder()
-                .userName("kien")
-                .password("123456")
-                .role(Role.ADMIN)
-                .personalId("CT060319")
-                .build());
-        userRepository.save(result);
+        try{
+            userService.saveUser(UserEntity.builder()
+                    .userName("kien")
+                    .password("123456")
+                    .role(Role.ADMIN)
+                    .personalId("CT060319")
+                    .build());
+            userService.saveUser(UserEntity.builder()
+                    .userName("dat")
+                    .password("123")
+                    .personalId("CT060307")
+                    .role(Role.MANAGER)
+                    .build());
+            userService.saveUser(UserEntity.builder()
+                    .userName("Nga")
+                    .password("123")
+                    .personalId("CT060328")
+                    .role(Role.MANAGER)
+                    .build());
+            userService.saveUser(UserEntity.builder()
+                    .userName("vuong")
+                    .password("123")
+                    .personalId("CT060333")
+                    .role(Role.MANAGER)
+                    .build());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         var item = AppUtil.initialBooks();
         bookService.saveListBooks(item);
     }
