@@ -5,11 +5,14 @@
 package com.mycompany.baitapnhom1.view;
 
 import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
+import com.mycompany.baitapnhom1.entity.ReturnState;
 import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
 import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -43,6 +46,39 @@ public class BorrowBookFrame extends javax.swing.JFrame {
         var defaultTime = new String[]{"1 month", "2 month", "3 month"};
         Arrays.stream(defaultQuantity).forEach(quantityModel::addElement);
         Arrays.stream(defaultTime).forEach(timeModel::addElement);
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem returnAction = new JMenuItem("Trả sách");
+        JMenuItem deleteAction = new JMenuItem("Xoá");
+        menu.add(returnAction);
+        menu.add(deleteAction);
+        deleteAction.addActionListener(e -> {
+            var selectedRow = tableContent.getSelectedRow();
+            deleteBorrowItem(selectedRow);
+        });
+        returnAction.addActionListener(e->{
+
+        });
+    }
+
+    private void deleteBorrowItem(int selectedRow) {
+        var state = model.getValueAt(selectedRow,7);
+        if(ReturnState.NOT_YET.getState().equals(state)){
+            JOptionPaneUtil.showErrorDialog("Please return the book before deleting this item",this);
+        }else {
+            var choose = JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure to delete this item?",
+                    "Delete",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            if(choose==JOptionPane.YES_OPTION){
+                var borrowId =(String) model.getValueAt(selectedRow,1);
+                borrowBookService.deleteItem(borrowId);
+                fetchAllData();
+            }
+        }
+
     }
 
     private void fetchAllData(){

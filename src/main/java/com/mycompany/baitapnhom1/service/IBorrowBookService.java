@@ -13,6 +13,7 @@ public interface IBorrowBookService {
     List<BorrowFormEntity> findAllByUser(String userId);
     List<BorrowFormEntity> findAllByBook(String bookId);
     BorrowFormEntity findByBorrowId(String id);
+    void deleteItem(String id);
     List<BorrowFormEntity> findAllByUserIdAndBookId(String userId, String bookId);
 
 }

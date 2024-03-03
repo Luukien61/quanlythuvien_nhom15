@@ -4,6 +4,7 @@ import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -27,4 +28,7 @@ public interface BorrowBookRepository extends JpaRepository<BorrowFormEntity, St
     List<BorrowFormEntity> findAllByUserAndBook(
             @Param("userId") String userId,
             @Param("bookId") String bookId);
+    @Modifying
+    @Query(value = "DELETE FROM borrow_form_entity WHERE borrow_id= :id",nativeQuery = true)
+    void deleteByBorrowId(@Param("id") String id);
 }

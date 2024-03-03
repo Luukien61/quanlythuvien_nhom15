@@ -83,6 +83,11 @@ public class BorrowBookService implements IBorrowBookService {
     }
 
     @Override
+    public void deleteItem(String id) {
+        borrowBookRepository.deleteByBorrowId(id);
+    }
+
+    @Override
     public List<BorrowFormEntity> findAllByUserIdAndBookId(String userId, String bookId) {
         if (!userId.isBlank() && !bookId.isBlank()) {
             return borrowBookRepository.findAllByUserAndBook(userId.trim().toUpperCase(), bookId.trim());
