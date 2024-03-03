@@ -39,16 +39,6 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public BookEntity findBookById(String id) {
-        try{
-            return bookRepository.findByBookId(id.trim());
-        }catch (Exception e){
-            throw new RuntimeException("An error occurs when trying to fetch books");
-
-        }
-    }
-
-    @Override
     public List<BookEntity> findBooksByPublisher(String publisher) {
         try{
             return bookRepository.findAllByPublisher(publisher.trim());
@@ -158,7 +148,8 @@ public class BookService implements IBookService {
     @Override
     public BookEntity findBookByBookId(String bookId) {
         try{
-            return bookRepository.findByBookId(bookId.trim());
+            return bookRepository.findByBookId(bookId.trim())
+                    .orElseThrow(()->new RuntimeException("The book doesn't exist"));
         }catch (Exception e){
             throw new RuntimeException("An error occurs when trying to fetch books");
 
@@ -199,5 +190,15 @@ public class BookService implements IBookService {
             case PUBLISHER -> items.addAll(this.findBooksByPublisher(key));
         }
         return items;
+    }
+
+    @Override
+    public void updateQuantity(BookEntity book, int borrowQuntity) {
+        try{
+            book.setRestQuantity(book.getRestQuantity()-borrowQuntity);
+            bookRepository.save(book);
+        }catch (Exception e){
+            throw new RuntimeException("An error occurs when updating the book");
+        }
     }
 }

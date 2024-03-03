@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<BookEntity, Long> {
@@ -17,7 +18,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
     BookEntity findById(@Param("id") String id);
     List<BookEntity> findAllByAuthor(String author);
     List<BookEntity> findAllByCategory(BookCategory category);
-    BookEntity findByBookId(String bookId);
+    Optional<BookEntity> findByBookId(String bookId);
     List<BookEntity> findAllByPublisher(String publisher);
     List<BookEntity> findAllByPublishDate(Date date);
     BookEntity findByBookName(String name);

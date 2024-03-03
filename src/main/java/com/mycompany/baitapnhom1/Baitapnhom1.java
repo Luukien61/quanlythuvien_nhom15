@@ -9,6 +9,7 @@ import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.repository.UserRepository;
 import com.mycompany.baitapnhom1.service.implement.BookService;
+import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
 import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.view.DangNhap;
@@ -36,24 +37,26 @@ public class Baitapnhom1 {
         var context = app.run(args);
         UserService userService = context.getBean(UserService.class);
         BookService bookService = context.getBean(BookService.class);
+        BorrowBookService borrowBookService = context.getBean(BorrowBookService.class);
         //initData(context);
-        DangNhap view = new DangNhap(userService, bookService);
+        DangNhap view = new DangNhap(userService, bookService, borrowBookService);
         view.setVisible(true);
     }
 
     private static void initData(ConfigurableApplicationContext context) {
-        UserRepository userRepository = context.getBean(UserRepository.class);
         UserService userService = context.getBean(UserService.class);
         BookService bookService = context.getBean(BookService.class);
-        try{
+        BorrowBookService borrowBookService = context.getBean(BorrowBookService.class);
+        UserEntity admin = UserEntity.builder()
+                .userName("kien")
+                .password("123")
+                .role(Role.ADMIN)
+                .personalId("CT060319")
+                .build();
+        try {
+            userService.saveUser(admin);
             userService.saveUser(UserEntity.builder()
-                    .userName("kien")
-                    .password("123456")
-                    .role(Role.ADMIN)
-                    .personalId("CT060319")
-                    .build());
-            userService.saveUser(UserEntity.builder()
-                    .userName("dat")
+                    .userName("Dat")
                     .password("123")
                     .personalId("CT060307")
                     .role(Role.MANAGER)
@@ -65,7 +68,7 @@ public class Baitapnhom1 {
                     .role(Role.MANAGER)
                     .build());
             userService.saveUser(UserEntity.builder()
-                    .userName("vuong")
+                    .userName("Vuong")
                     .password("123")
                     .personalId("CT060333")
                     .role(Role.MANAGER)
@@ -75,6 +78,8 @@ public class Baitapnhom1 {
         }
         var item = AppUtil.initialBooks();
         bookService.saveListBooks(item);
+        var borrowedItems = AppUtil.initialBorrowedBooks(item.getFirst(), admin);
+        borrowBookService.saveNew(borrowedItems.getFirst());
     }
 
 }

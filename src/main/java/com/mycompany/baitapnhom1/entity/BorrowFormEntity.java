@@ -7,21 +7,24 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class BorrowFormEntity extends BaseEntity {
+public class BorrowFormEntity {
+    @Id
     private String borrowId;
     private Date borrowDate;
     private Date expiredDate;
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "borrowForm")
-    private List<BookEntity> book;
+    private int quantity;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private BookEntity book;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user",referencedColumnName = "id")
     private UserEntity user;
+    @Enumerated(EnumType.STRING)
+    private ReturnState state;
 
 }

@@ -86,7 +86,7 @@ public class QuanLyDocGia extends javax.swing.JFrame {
                             displayUserBorrowFrame(user);
                         }
 
-                    } catch (SQLException ex) {
+                    } catch (RuntimeException ex) {
                         JOptionPane.showMessageDialog(
                                 null,
                                 ex.getMessage(),
@@ -101,7 +101,6 @@ public class QuanLyDocGia extends javax.swing.JFrame {
     private void displayUserBorrowFrame(UserEntity user) {
 
     }
-
 
     private void initTableModel() {
         if (this.model == null) {
@@ -245,7 +244,7 @@ public class QuanLyDocGia extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(30, 30, 30)
-                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addContainerGap(116, Short.MAX_VALUE))
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -273,9 +272,6 @@ public class QuanLyDocGia extends javax.swing.JFrame {
 
     private void addNewManager(UserEntity user) {
         AddLibrarianFrame frame = new AddLibrarianFrame(userService,user);
-        setVisible(false);
-        frame.setVisible(true);
-        frame.setLocationRelativeTo(null);
         AppUtil.setUpWindowListener(frame,this, this::fetchExistUsers);
     }
 

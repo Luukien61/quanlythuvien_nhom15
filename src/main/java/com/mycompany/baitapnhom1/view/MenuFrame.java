@@ -7,6 +7,7 @@ package com.mycompany.baitapnhom1.view;
 import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.service.implement.BookService;
+import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
 import com.mycompany.baitapnhom1.util.AppUtil;
 
@@ -22,11 +23,13 @@ public class MenuFrame extends javax.swing.JFrame {
      */
     private final UserService userService;
     private final BookService bookService;
+    private final BorrowBookService borrowBookService;
     private UserEntity currentUser;
 
-    public MenuFrame(UserService userService, BookService bookService) {
+    public MenuFrame(UserService userService, BookService bookService, BorrowBookService borrowBookService) {
         this.bookService = bookService;
         this.userService = userService;
+        this.borrowBookService=borrowBookService;
         initComponents();
         setLocationRelativeTo(null);
         clearFocus();
@@ -176,39 +179,22 @@ public class MenuFrame extends javax.swing.JFrame {
 
     private void btnDGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDGActionPerformed
         // TODO add your handling code here:
-        QuanLyDocGia readerFrame = new QuanLyDocGia(userService);
-        readerFrame.setVisible(true);
-        setFocusable(false);
-        setVisible(false);
-        readerFrame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                setVisible(true);
-            }
-        });
+        QuanLyDocGia frame = new QuanLyDocGia(userService);
+        AppUtil.setUpWindowListener(frame,this,null);
 
     }//GEN-LAST:event_btnDGActionPerformed
 
     private void btnSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSachActionPerformed
         // TODO add your handling code here:
         BookManagementFrame frame = new BookManagementFrame(bookService,userService);
-        frame.setVisible(true);
-        setFocusable(false);
-        setVisible(false);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                setVisible(true);
-            }
-        });
+        AppUtil.setUpWindowListener(frame,this,null);
 
     }//GEN-LAST:event_btnSachActionPerformed
 
     private void btnMTraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMTraActionPerformed
         // TODO add your handling code here:
-        quanLyMuonTra mt = new quanLyMuonTra();
-        mt.setVisible(true);
-        setFocusable(false);
+        BorrowBookFrame frame = new BorrowBookFrame(borrowBookService);
+        AppUtil.setUpWindowListener(frame,this,null);
     }//GEN-LAST:event_btnMTraActionPerformed
 
     private void btnThongKeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThongKeActionPerformed

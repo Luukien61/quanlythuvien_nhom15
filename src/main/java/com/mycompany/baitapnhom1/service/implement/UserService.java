@@ -39,11 +39,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserEntity findUserByPersonalId(String id) throws SQLException {
+    public UserEntity findUserByPersonalId(String id) throws RuntimeException {
         try {
-            return userRepository.findByPersonalId(id).orElse(null);
+            return userRepository.findByPersonalId(id.trim().toUpperCase())
+                    .orElseThrow(() -> new RuntimeException("The user doesn't exist"));
         } catch (Exception e) {
-            throw new SQLException("Sorry, an error occurs when finding the user");
+            throw new RuntimeException("Sorry, an error occurs when finding the user");
         }
     }
 
@@ -93,7 +94,6 @@ public class UserService implements IUserService {
             throw new SQLException("Sorry, an error occurs when finding the user");
         }
     }
-
 
 
     @Override

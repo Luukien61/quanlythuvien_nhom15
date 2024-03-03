@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Entity
 @Getter
@@ -24,11 +25,17 @@ public class BookEntity extends BaseEntity {
     private int restQuantity;
     @Enumerated(EnumType.STRING)
     private BookCategory category;
-    @ManyToMany()
-    @JoinTable(
-            name = "book_borrow",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "borrow_id")
-    )
-    private List<BorrowFormEntity> borrowForm;
+    @OneToMany(mappedBy = "book",fetch = FetchType.LAZY)
+    private List<BorrowFormEntity> borrows;
+
+//    public int getRestQuantity() {
+//        if (this.borrows == null || this.borrows.isEmpty()) {
+//            return this.totalQuantity;
+//        }
+//        int borrowed = 0;
+//        for (BorrowFormEntity item : borrows) {
+//            borrowed += item.getQuantity();
+//        }
+//        return totalQuantity - borrowed;
+//    }
 }

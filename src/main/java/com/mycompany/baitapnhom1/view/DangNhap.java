@@ -10,6 +10,7 @@ import com.mycompany.baitapnhom1.Baitapnhom1;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.model.ResultModel;
 import com.mycompany.baitapnhom1.service.implement.BookService;
+import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
 import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
@@ -30,12 +31,14 @@ public class DangNhap extends javax.swing.JFrame {
 
     private final UserService userService;
     private final BookService bookService;
+    private final BorrowBookService borrowBookService;
 
-    public DangNhap(UserService userService,BookService bookService) {
+    public DangNhap(UserService userService,BookService bookService,BorrowBookService borrowBookService) {
         initComponents();
         setLocationRelativeTo(null);
         this.userService=userService;
         this.bookService=bookService;
+        this.borrowBookService=borrowBookService;
     }
 
     /*
@@ -174,7 +177,7 @@ public class DangNhap extends javax.swing.JFrame {
             var data = checkUser(id,pass);
             if(data.getData()!=null){
                 AppUtil.setCurrentUser((UserEntity) data.getData());
-                MenuFrame main = new MenuFrame(userService,bookService);
+                MenuFrame main = new MenuFrame(userService,bookService,borrowBookService);
                 main.setVisible(true);
                 this.dispose();
             }
