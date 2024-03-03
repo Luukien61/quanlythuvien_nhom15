@@ -8,6 +8,7 @@ import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.service.implement.UserService;
 import com.mycompany.baitapnhom1.util.AppUtil;
+import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -87,11 +88,7 @@ public class QuanLyDocGia extends javax.swing.JFrame {
                         }
 
                     } catch (RuntimeException ex) {
-                        JOptionPane.showMessageDialog(
-                                null,
-                                ex.getMessage(),
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
+                        JOptionPaneUtil.showErrorDialog(ex.getMessage(),null);
                     }
                 }
             }
@@ -124,11 +121,7 @@ public class QuanLyDocGia extends javax.swing.JFrame {
                 index.addAndGet(1);
             });
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
         }
     }
 
@@ -145,11 +138,7 @@ public class QuanLyDocGia extends javax.swing.JFrame {
         try {
             fetchData(() -> userService.fetchAllUser(Role.USER));
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
         }
     }
 

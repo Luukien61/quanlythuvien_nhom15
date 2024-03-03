@@ -12,10 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BookRepository extends JpaRepository<BookEntity, Long> {
+public interface BookRepository extends JpaRepository<BookEntity, String> {
     List<BookEntity> findAll();
-    @Query(value = "select * from book_entity where id= :id",nativeQuery = true)
-    BookEntity findById(@Param("id") String id);
     List<BookEntity> findAllByAuthor(String author);
     List<BookEntity> findAllByCategory(BookCategory category);
     Optional<BookEntity> findByBookId(String bookId);

@@ -120,6 +120,8 @@ public class AddBookFrame extends javax.swing.JFrame {
             }
         });
 
+        txtCategory.setBackground(new java.awt.Color(255, 255, 255));
+        txtCategory.setForeground(new java.awt.Color(0, 0, 0));
         txtCategory.setFocusable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -227,12 +229,7 @@ public class AddBookFrame extends javax.swing.JFrame {
             clearText();
             JOptionPaneUtil.showMessageDialog(result.getMessage(), 500, this);
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
         }
 
     }//GEN-LAST:event_btnAddActionPerformed

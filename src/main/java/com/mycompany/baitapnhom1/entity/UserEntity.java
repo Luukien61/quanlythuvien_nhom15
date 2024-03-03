@@ -16,7 +16,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity extends BaseEntity {
+public class UserEntity  {
+    @Id
     private String personalId;
     private String userName;
     private String password;

@@ -234,6 +234,7 @@ public class UpdateBookFrame extends javax.swing.JFrame {
         Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         int quantity = Integer.parseInt(txtQuantity.getText());
         int availableQuantity = Integer.parseInt(txtRestQuantity.getText());
+        var prevBookId=book.getBookId();
         book.setBookId(bookId);
         book.setBookName(bookName);
         book.setCategory(bookCategory);
@@ -243,16 +244,11 @@ public class UpdateBookFrame extends javax.swing.JFrame {
         book.setTotalQuantity(quantity);
         book.setRestQuantity(availableQuantity);
         try {
-            var result = bookService.updateBook(book);
+            var result = bookService.updateBook(book,prevBookId);
             JOptionPaneUtil.showMessageDialog(result.getMessage(), 800, null);
             dispose();
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 

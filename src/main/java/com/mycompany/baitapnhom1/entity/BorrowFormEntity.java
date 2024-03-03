@@ -20,9 +20,10 @@ public class BorrowFormEntity {
     private Date expiredDate;
     private int quantity;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "book_id",referencedColumnName = "bookId")
     private BookEntity book;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user",referencedColumnName = "id")
+    @JoinColumn(name = "user_id",referencedColumnName = "personalId")
     private UserEntity user;
     @Enumerated(EnumType.STRING)
     private ReturnState state;

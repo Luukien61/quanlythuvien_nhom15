@@ -1,15 +1,11 @@
 package com.mycompany.baitapnhom1.service.implement;
 
-import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
-import com.mycompany.baitapnhom1.entity.ReturnState;
-import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.repository.BorrowBookRepository;
 import com.mycompany.baitapnhom1.service.IBorrowBookService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -24,17 +20,17 @@ public class BorrowBookService implements IBorrowBookService {
 
     @Override
     public void saveNew(BorrowFormEntity item) {
-        try{
-            var book =item.getBook();
+        try {
+            var book = item.getBook();
             var remainingQuantity = book.getRestQuantity();
-            var borrowed= item.getQuantity();
-            if(item.getQuantity()<=remainingQuantity){
+            var borrowed = item.getQuantity();
+            if (item.getQuantity() <= remainingQuantity) {
                 borrowBookRepository.save(item);
-                book.setRestQuantity(book.getRestQuantity()-item.getQuantity());
-                bookService.updateQuantity(book,borrowed);
+                book.setRestQuantity(book.getRestQuantity() - item.getQuantity());
+                bookService.updateQuantity(book, borrowed);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -60,7 +56,7 @@ public class BorrowBookService implements IBorrowBookService {
                     .state(NOT_YET)
                     .build();
             borrowBookRepository.save(borrowBook);
-            bookService.updateQuantity(book,quantity);
+            bookService.updateQuantity(book, quantity);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
@@ -72,17 +68,30 @@ public class BorrowBookService implements IBorrowBookService {
     }
 
     @Override
-    public List<BorrowFormEntity> findAllByUser(UserEntity user) {
+    public List<BorrowFormEntity> findAllByUser(String userId) {
         return null;
     }
 
     @Override
-    public List<BorrowFormEntity> findAllByBook(BookEntity book) {
+    public List<BorrowFormEntity> findAllByBook(String bookId) {
         return null;
     }
 
     @Override
     public BorrowFormEntity findByBorrowId(String id) {
         return null;
+    }
+
+    @Override
+    public List<BorrowFormEntity> findAllByUserIdAndBookId(String userId, String bookId) {
+        if (!userId.isBlank() && !bookId.isBlank()) {
+            return borrowBookRepository.findAllByUserAndBook(userId.trim().toUpperCase(), bookId.trim());
+        }
+        if (!userId.isBlank()) {
+
+            return borrowBookRepository.findAllByUser(userId.trim().toUpperCase());
+        }
+        return borrowBookRepository.findAllByBook(bookId.trim());
+
     }
 }

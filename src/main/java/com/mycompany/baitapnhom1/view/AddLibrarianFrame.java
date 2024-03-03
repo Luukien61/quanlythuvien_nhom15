@@ -162,12 +162,7 @@ public class AddLibrarianFrame extends javax.swing.JFrame {
             }
 
         } catch (IllegalArgumentException | SQLException e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
         }
 
     }//GEN-LAST:event_btnAddActionPerformed

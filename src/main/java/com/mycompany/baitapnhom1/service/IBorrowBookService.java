@@ -10,8 +10,9 @@ public interface IBorrowBookService {
     void saveNew(BorrowFormEntity item);
     void saveNew(String bookId, String userId ,int quantity, int time);
     List<BorrowFormEntity> fetchAll();
-    List<BorrowFormEntity> findAllByUser(UserEntity user);
-    List<BorrowFormEntity> findAllByBook(BookEntity book);
+    List<BorrowFormEntity> findAllByUser(String userId);
+    List<BorrowFormEntity> findAllByBook(String bookId);
     BorrowFormEntity findByBorrowId(String id);
+    List<BorrowFormEntity> findAllByUserIdAndBookId(String userId, String bookId);
 
 }

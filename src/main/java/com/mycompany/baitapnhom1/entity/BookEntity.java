@@ -13,7 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BookEntity extends BaseEntity {
+public class BookEntity  {
+    @Id
     @Column(unique = true)
     private String bookId;
     @Column(unique = true)

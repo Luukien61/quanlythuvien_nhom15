@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class JOptionPaneUtil {
-    public static void showMessageDialog(String message, int delay,@Nullable Component component){
+    public static void showMessageDialog(String message, int delay, @Nullable Component component) {
         JOptionPane optionPane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION);
         final JDialog dialog = new JDialog();
         dialog.setTitle("Thông báo");
@@ -25,6 +25,15 @@ public class JOptionPaneUtil {
         timer.setRepeats(false);
         timer.start();
         dialog.setVisible(true);
+    }
+
+    public static void showErrorDialog(String message, @Nullable JFrame parent) {
+        JOptionPane.showMessageDialog(
+                parent,
+                message,
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+        );
     }
 
 }

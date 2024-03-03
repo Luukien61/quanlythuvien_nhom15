@@ -109,11 +109,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
         try {
             book = bookService.findBookByBookId(bookId);
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(
-                    null,
-                    e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
         }
         return book;
     }
@@ -284,12 +280,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
                 initData();
                 JOptionPaneUtil.showMessageDialog("Deleted Successfully", 1500, jScrollPane2);
             } catch (RuntimeException e) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        e.getMessage(),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
             }
         }
     }
@@ -322,7 +313,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
             });
             clearText();
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
         }
     }
 
@@ -366,12 +357,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
                     var year = Integer.parseInt(key);
                     items.addAll(bookService.findBookByYear(year));
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Please type the year correctly",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE
-                    );
+                    JOptionPaneUtil.showErrorDialog("Please type the year correctly",this);
                 }
             } else {
                 try {
@@ -392,11 +378,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Please fill require fields",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPaneUtil.showErrorDialog("Please fill the require fields",this);
 
         }
     }
