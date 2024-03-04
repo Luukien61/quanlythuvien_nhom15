@@ -5,11 +5,13 @@ import com.mycompany.baitapnhom1.repository.BorrowBookRepository;
 import com.mycompany.baitapnhom1.service.IBorrowBookService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 
 import static com.mycompany.baitapnhom1.entity.ReturnState.NOT_YET;
+import static com.mycompany.baitapnhom1.entity.ReturnState.RETURNED;
 
 @Service
 @AllArgsConstructor
@@ -31,7 +33,7 @@ public class BorrowBookService implements IBorrowBookService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -58,7 +60,7 @@ public class BorrowBookService implements IBorrowBookService {
             borrowBookRepository.save(borrowBook);
             bookService.updateQuantity(book, quantity);
         } catch (RuntimeException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -79,10 +81,12 @@ public class BorrowBookService implements IBorrowBookService {
 
     @Override
     public BorrowFormEntity findByBorrowId(String id) {
-        return null;
+        return borrowBookRepository.findByBorrowId(id)
+                .orElseThrow(() -> new RuntimeException("There no item matching"));
     }
 
     @Override
+    @Transactional
     public void deleteItem(String id) {
         borrowBookRepository.deleteByBorrowId(id);
     }
@@ -97,6 +101,19 @@ public class BorrowBookService implements IBorrowBookService {
             return borrowBookRepository.findAllByUser(userId.trim().toUpperCase());
         }
         return borrowBookRepository.findAllByBook(bookId.trim());
+    }
 
+    @Override
+    public void returnBook(String borrowId) {
+        try {
+            var item = findByBorrowId(borrowId.trim());
+            var book = bookService.findBookByBookId(item.getBook().getBookId());
+            var quantity = item.getQuantity();
+            item.setState(RETURNED);
+            borrowBookRepository.save(item);
+            bookService.updateQuantity(book,-quantity);
+        }catch (RuntimeException e){
+            throw new RuntimeException(e);
+        }
     }
 }

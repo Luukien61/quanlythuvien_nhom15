@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.mycompany.baitapnhom1.view;
 
 import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
@@ -13,6 +9,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -55,16 +53,47 @@ public class BorrowBookFrame extends javax.swing.JFrame {
             var selectedRow = tableContent.getSelectedRow();
             deleteBorrowItem(selectedRow);
         });
-        returnAction.addActionListener(e->{
-
+        returnAction.addActionListener(e -> {
+            var selectedRow = tableContent.getSelectedRow();
+            returnBook(selectedRow);
+        });
+        tableContent.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                var row = tableContent.rowAtPoint(e.getPoint());
+                if (row >= 0 && row < tableContent.getRowCount()) {
+                    tableContent.setRowSelectionInterval(row, row);
+                    if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
+                        menu.show(e.getComponent(), e.getX(), e.getY());
+                    }
+                } else {
+                    tableContent.clearSelection();
+                }
+            }
         });
     }
 
+    private void returnBook(int selectedRow) {
+        var state = model.getValueAt(selectedRow, 7);
+        if (ReturnState.RETURNED.getState().equals(state)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "This items was returned",
+                    "Action",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } else {
+            var borrowId = (String) model.getValueAt(selectedRow, 1);
+            borrowBookService.returnBook(borrowId);
+            fetchAllData();
+        }
+    }
+
     private void deleteBorrowItem(int selectedRow) {
-        var state = model.getValueAt(selectedRow,7);
-        if(ReturnState.NOT_YET.getState().equals(state)){
-            JOptionPaneUtil.showErrorDialog("Please return the book before deleting this item",this);
-        }else {
+        var state = model.getValueAt(selectedRow, 7);
+        if (ReturnState.NOT_YET.getState().equals(state)) {
+            JOptionPaneUtil.showErrorDialog("Please return the book before deleting this item", this);
+        } else {
             var choose = JOptionPane.showConfirmDialog(
                     this,
                     "Are you sure to delete this item?",
@@ -72,8 +101,8 @@ public class BorrowBookFrame extends javax.swing.JFrame {
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.INFORMATION_MESSAGE
             );
-            if(choose==JOptionPane.YES_OPTION){
-                var borrowId =(String) model.getValueAt(selectedRow,1);
+            if (choose == JOptionPane.YES_OPTION) {
+                var borrowId = (String) model.getValueAt(selectedRow, 1);
                 borrowBookService.deleteItem(borrowId);
                 fetchAllData();
             }
@@ -81,22 +110,22 @@ public class BorrowBookFrame extends javax.swing.JFrame {
 
     }
 
-    private void fetchAllData(){
+    private void fetchAllData() {
         fetchData(borrowBookService::fetchAll);
     }
 
     private void fetchData(Supplier<List<BorrowFormEntity>> function) {
         try {
             List<BorrowFormEntity> items = function.get();
-            if(!items.isEmpty()){
+            if (!items.isEmpty()) {
                 model.setRowCount(0);
-                int index=1;
+                int index = 1;
                 LocalDate borrowDate;
                 LocalDate returnDate;
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                for(BorrowFormEntity item : items){
-                    borrowDate=item.getBorrowDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    returnDate=item.getExpiredDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                for (BorrowFormEntity item : items) {
+                    borrowDate = item.getBorrowDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    returnDate = item.getExpiredDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     var data = new Object[]{
                             index,
                             item.getBorrowId(),
@@ -108,12 +137,11 @@ public class BorrowBookFrame extends javax.swing.JFrame {
                             item.getState().getState()
                     };
                     model.addRow(data);
-                    index+=1;
+                    index += 1;
                 }
-            }
-            else throw new RuntimeException("There is no result matching");
+            } else throw new RuntimeException("There is no result matching");
         } catch (RuntimeException e) {
-            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
+            JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
         }
     }
 
@@ -164,19 +192,19 @@ public class BorrowBookFrame extends javax.swing.JFrame {
         });
 
         tableContent.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][]{
 
-            },
-            new String [] {
-                "Stt", "Mã phiếu mượn", "Mã sinh viên", "Mã sách", "Số lượng", "Ngày mượn", "Ngày hẹn trả", "Trạng thái"
-            }
+                },
+                new String[]{
+                        "Stt", "Mã phiếu mượn", "Mã sinh viên", "Mã sách", "Số lượng", "Ngày mượn", "Ngày hẹn trả", "Trạng thái"
+                }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+            boolean[] canEdit = new boolean[]{
+                    false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jScrollPane1.setViewportView(tableContent);
@@ -219,70 +247,70 @@ public class BorrowBookFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel1)
-                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(33, 33, 33)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtUserId, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtBookId, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(84, 84, 84)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel4))
-                                        .addGap(26, 26, 26)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(snpQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(snpTime, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(339, 339, 339)
-                                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 65, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1)))
-                .addContainerGap())
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGap(50, 50, 50)
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addGroup(layout.createSequentialGroup()
+                                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(jLabel1)
+                                                                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                .addGap(33, 33, 33)
+                                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(txtUserId, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(txtBookId, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                                .addGap(84, 84, 84)
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addGroup(layout.createSequentialGroup()
+                                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(jLabel3)
+                                                                                        .addComponent(jLabel4))
+                                                                                .addGap(26, 26, 26)
+                                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(snpQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(snpTime, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGap(339, 339, 339)
+                                                                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGap(0, 65, Short.MAX_VALUE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addContainerGap()
+                                                .addComponent(jScrollPane1)))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtUserId, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(snpQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtBookId, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel4)
-                    .addComponent(snpTime, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAdd)
-                    .addComponent(btnSearch))
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                .addComponent(btnRefresh)
-                .addGap(18, 18, 18))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel1)
+                                        .addComponent(txtUserId, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel3)
+                                        .addComponent(snpQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(21, 21, 21)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(txtBookId, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel4)
+                                        .addComponent(snpTime, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(40, 40, 40)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnAdd)
+                                        .addComponent(btnSearch))
+                                .addGap(18, 18, 18)
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                                .addComponent(btnRefresh)
+                                .addGap(18, 18, 18))
         );
 
         pack();
@@ -291,19 +319,19 @@ public class BorrowBookFrame extends javax.swing.JFrame {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         var userId = txtUserId.getText();
         var bookId = txtBookId.getText();
-        if(!userId.isBlank() && !bookId.isBlank()){
+        if (!userId.isBlank() && !bookId.isBlank()) {
             int quantity = (Integer) snpQuantity.getSelectedItem();
             int time = Integer.parseInt(((String) Objects.requireNonNull(snpTime.getSelectedItem())).substring(0, 1));
             try {
                 borrowBookService.saveNew(bookId, userId, quantity, time);
                 fetchAllData();
                 clearText();
-                JOptionPaneUtil.showMessageDialog("Added successfully",800,null);
+                JOptionPaneUtil.showMessageDialog("Added successfully", 800, null);
             } catch (RuntimeException e) {
-                JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
+                JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
             }
-        }else {
-            JOptionPaneUtil.showErrorDialog("Please fill the require fields",this);
+        } else {
+            JOptionPaneUtil.showErrorDialog("Please fill the require fields", this);
         }
 
 
@@ -320,10 +348,10 @@ public class BorrowBookFrame extends javax.swing.JFrame {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         var userId = txtUserId.getText().trim();
         var bookId = txtBookId.getText().trim();
-        if(userId.isBlank() && bookId.isBlank()){
-            JOptionPaneUtil.showErrorDialog("Please fill the require fields",this);
-        }else {
-            fetchData(()->borrowBookService.findAllByUserIdAndBookId(userId,bookId));
+        if (userId.isBlank() && bookId.isBlank()) {
+            JOptionPaneUtil.showErrorDialog("Please fill the require fields", this);
+        } else {
+            fetchData(() -> borrowBookService.findAllByUserIdAndBookId(userId, bookId));
         }
 
     }//GEN-LAST:event_btnSearchActionPerformed

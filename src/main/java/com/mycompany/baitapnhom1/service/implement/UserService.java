@@ -44,7 +44,7 @@ public class UserService implements IUserService {
             return userRepository.findByPersonalId(id.trim().toUpperCase())
                     .orElseThrow(() -> new RuntimeException("The user doesn't exist"));
         } catch (Exception e) {
-            throw new RuntimeException("Sorry, an error occurs when finding the user");
+            throw new RuntimeException(e.getMessage());
         }
     }
 

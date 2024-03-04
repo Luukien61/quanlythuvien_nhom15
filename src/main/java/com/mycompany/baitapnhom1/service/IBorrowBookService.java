@@ -16,4 +16,6 @@ public interface IBorrowBookService {
     void deleteItem(String id);
     List<BorrowFormEntity> findAllByUserIdAndBookId(String userId, String bookId);
 
+    void returnBook(String borrowId);
+
 }

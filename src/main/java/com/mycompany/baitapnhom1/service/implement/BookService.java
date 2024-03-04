@@ -147,13 +147,8 @@ public class BookService implements IBookService {
 
     @Override
     public BookEntity findBookByBookId(String bookId) {
-        try{
             return bookRepository.findByBookId(bookId.trim())
                     .orElseThrow(()->new RuntimeException("The book doesn't exist"));
-        }catch (Exception e){
-            throw new RuntimeException("An error occurs when trying to fetch books");
-
-        }
     }
 
     @Override
