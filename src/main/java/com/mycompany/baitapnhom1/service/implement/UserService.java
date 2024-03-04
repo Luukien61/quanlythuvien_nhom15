@@ -1,6 +1,6 @@
 package com.mycompany.baitapnhom1.service.implement;
 
-import com.mycompany.baitapnhom1.api.GetUserController;
+import com.mycompany.baitapnhom1.controller.GetUserController;
 import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.repository.UserRepository;
@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -30,17 +32,21 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserEntity findUserByName(String userName) throws SQLException {
+    public UserEntity findUserByName(String userName)  {
         try {
-            return userRepository.findByUserName(userName).orElse(null);
+            return userRepository.findByUserName(userName.trim())
+                    .orElseThrow(()-> new RuntimeException("There no result matching"));
         } catch (Exception e) {
-            throw new SQLException("Sorry, an error occurs when finding the user");
+            throw new RuntimeException(e.getMessage());
         }
     }
 
     @Override
     public UserEntity findUserByPersonalId(String id) throws RuntimeException {
         try {
+            if(id==null){
+                throw new RuntimeException("Please fill the require filed");
+            }
             return userRepository.findByPersonalId(id.trim().toUpperCase())
                     .orElseThrow(() -> new RuntimeException("The user doesn't exist"));
         } catch (Exception e) {
@@ -55,6 +61,14 @@ public class UserService implements IUserService {
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+    @Transactional
+    public void deleteUserById(String id){
+        try{
+            userRepository.deleteById(id);
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -117,5 +131,18 @@ public class UserService implements IUserService {
             }
         });
         return findAllUserByRole(Role.USER);
+    }
+
+    public UserEntity findByIdOrUserName(String key){
+        if(key==null){
+            throw new RuntimeException("Please fill the require field");
+        }
+        String regex = "^[CAD]T.*";
+        Pattern idPattern = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = idPattern.matcher(key);
+        if(matcher.matches()){
+            return findUserByPersonalId(key);
+        }
+        else return findUserByName(key);
     }
 }

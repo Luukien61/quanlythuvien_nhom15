@@ -1,7 +1,8 @@
-package com.mycompany.baitapnhom1.api;
+package com.mycompany.baitapnhom1.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.baitapnhom1.entity.UserEntity;
+import com.mycompany.baitapnhom1.util.NetworkUtil;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -13,7 +14,7 @@ import java.util.ResourceBundle;
 
 public class GetUserController {
 
-    private static final String URI = ResourceBundle.getBundle("database").getString("userApi");
+    private static final String URI = NetworkUtil.getUserURI();
     public static List<UserEntity> getUser() {
         try{
             URL url= new URI(URI).toURL();

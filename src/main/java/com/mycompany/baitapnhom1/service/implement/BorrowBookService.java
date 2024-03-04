@@ -7,6 +7,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.table.DefaultTableModel;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +75,13 @@ public class BorrowBookService implements IBorrowBookService {
 
     @Override
     public List<BorrowFormEntity> findAllByUser(String userId) {
-        return null;
+        try{
+            var items = borrowBookRepository.findAllByUser(userId);
+            if(!items.isEmpty()) return items;
+            throw new RuntimeException("This user has not borrowed any books yet");
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
@@ -97,7 +107,6 @@ public class BorrowBookService implements IBorrowBookService {
             return borrowBookRepository.findAllByUserAndBook(userId.trim().toUpperCase(), bookId.trim());
         }
         if (!userId.isBlank()) {
-
             return borrowBookRepository.findAllByUser(userId.trim().toUpperCase());
         }
         return borrowBookRepository.findAllByBook(bookId.trim());
@@ -114,6 +123,28 @@ public class BorrowBookService implements IBorrowBookService {
             bookService.updateQuantity(book,-quantity);
         }catch (RuntimeException e){
             throw new RuntimeException(e);
+        }
+    }
+    public void displayData(DefaultTableModel model, List<BorrowFormEntity> items){
+        int index = 1;
+        LocalDate borrowDate;
+        LocalDate returnDate;
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        for (BorrowFormEntity item : items) {
+            borrowDate = item.getBorrowDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            returnDate = item.getExpiredDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            var data = new Object[]{
+                    index,
+                    item.getBorrowId(),
+                    item.getUser().getPersonalId(),
+                    item.getBook().getBookId(),
+                    item.getQuantity(),
+                    borrowDate.format(dateTimeFormatter),
+                    returnDate.format(dateTimeFormatter),
+                    item.getState().getState()
+            };
+            model.addRow(data);
+            index += 1;
         }
     }
 }

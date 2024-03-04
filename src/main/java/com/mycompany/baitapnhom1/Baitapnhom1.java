@@ -4,10 +4,8 @@
 
 package com.mycompany.baitapnhom1;
 
-import com.mycompany.baitapnhom1.api.GetUserController;
 import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
-import com.mycompany.baitapnhom1.repository.UserRepository;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
@@ -17,7 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.sql.SQLException;

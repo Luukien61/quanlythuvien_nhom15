@@ -119,26 +119,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
             List<BorrowFormEntity> items = function.get();
             if (!items.isEmpty()) {
                 model.setRowCount(0);
-                int index = 1;
-                LocalDate borrowDate;
-                LocalDate returnDate;
-                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                for (BorrowFormEntity item : items) {
-                    borrowDate = item.getBorrowDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    returnDate = item.getExpiredDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    var data = new Object[]{
-                            index,
-                            item.getBorrowId(),
-                            item.getUser().getPersonalId(),
-                            item.getBook().getBookId(),
-                            item.getQuantity(),
-                            borrowDate.format(dateTimeFormatter),
-                            returnDate.format(dateTimeFormatter),
-                            item.getState().getState()
-                    };
-                    model.addRow(data);
-                    index += 1;
-                }
+                borrowBookService.displayData(model,items);
             } else throw new RuntimeException("There is no result matching");
         } catch (RuntimeException e) {
             JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
@@ -175,7 +156,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Mã sách");
 
-        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Create.png"))); // NOI18N
+        btnAdd.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Create.png")))); // NOI18N
         btnAdd.setText("Mượn");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -183,7 +164,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
             }
         });
 
-        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Search.png"))); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Search.png")))); // NOI18N
         btnSearch.setText("Tìm kiếm");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -320,15 +301,20 @@ public class BorrowBookFrame extends javax.swing.JFrame {
         var userId = txtUserId.getText();
         var bookId = txtBookId.getText();
         if (!userId.isBlank() && !bookId.isBlank()) {
-            int quantity = (Integer) snpQuantity.getSelectedItem();
-            int time = Integer.parseInt(((String) Objects.requireNonNull(snpTime.getSelectedItem())).substring(0, 1));
-            try {
-                borrowBookService.saveNew(bookId, userId, quantity, time);
-                fetchAllData();
-                clearText();
-                JOptionPaneUtil.showMessageDialog("Added successfully", 800, null);
-            } catch (RuntimeException e) {
-                JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
+            var items = borrowBookService.findAllByUserIdAndBookId(userId,bookId);
+            if(items.isEmpty() || checkAllReturn(items)){
+                int quantity = (Integer) snpQuantity.getSelectedItem();
+                int time = Integer.parseInt(((String) Objects.requireNonNull(snpTime.getSelectedItem())).substring(0, 1));
+                try {
+                    borrowBookService.saveNew(bookId, userId, quantity, time);
+                    fetchAllData();
+                    clearText();
+                    JOptionPaneUtil.showMessageDialog("Added successfully", 800, null);
+                } catch (RuntimeException e) {
+                    JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
+                }
+            }else {
+                JOptionPaneUtil.showErrorDialog("This user is currently borrowing the book",this);
             }
         } else {
             JOptionPaneUtil.showErrorDialog("Please fill the require fields", this);
@@ -336,6 +322,17 @@ public class BorrowBookFrame extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private boolean checkAllReturn(List<BorrowFormEntity> items) {
+        for(BorrowFormEntity item : items){
+            var state = item.getState().getState();
+            if(state.equals(ReturnState.NOT_YET.getState())
+                    || state.equals(ReturnState.EXPIRED.getState())){
+                return false;
+            }
+        }
+        return true;
+    }
 
 
     private void clearText() {

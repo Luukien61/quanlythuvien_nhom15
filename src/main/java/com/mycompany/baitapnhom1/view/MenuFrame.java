@@ -11,8 +11,6 @@ import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
 import com.mycompany.baitapnhom1.util.AppUtil;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Objects;
 
 
@@ -30,12 +28,13 @@ public class MenuFrame extends javax.swing.JFrame {
         this.bookService = bookService;
         this.userService = userService;
         this.borrowBookService=borrowBookService;
+        currentUser=AppUtil.getCurrentUser();
         initComponents();
         setLocationRelativeTo(null);
-        clearFocus();
+        initData();
     }
 
-    private void clearFocus() {
+    private void initData() {
         btnSach.setFocusable(false);
         btnDG.setFocusable(false);
         btnMTra.setFocusable(false);
@@ -44,6 +43,8 @@ public class MenuFrame extends javax.swing.JFrame {
         if(currentUser.getRole()==Role.ADMIN){
             btnDG.setText("Nhân viên");
         }
+        txtName.setText(currentUser.getUserName());
+        txtRole.setText(currentUser.getRole().toString());
     }
 
     /**
@@ -54,7 +55,7 @@ public class MenuFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        currentUser = AppUtil.getCurrentUser();
+
         btnSach = new javax.swing.JButton();
         btnMTra = new javax.swing.JButton();
         btnDG = new javax.swing.JButton();
@@ -64,11 +65,12 @@ public class MenuFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtName = new javax.swing.JLabel();
         txtRole = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Quản lý thư viện");
 
-        btnSach.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Documents.png")))); // NOI18N
+        btnSach.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/List.png")))); // NOI18N
         btnSach.setText("Quản lý sách");
         btnSach.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,7 +86,7 @@ public class MenuFrame extends javax.swing.JFrame {
             }
         });
 
-        btnDG.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Users.png")))); // NOI18N
+        btnDG.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/User.png")))); // NOI18N
         btnDG.setText("Quản lý độc giả");
         btnDG.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,7 +102,7 @@ public class MenuFrame extends javax.swing.JFrame {
             }
         });
 
-        btnThongKe.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Statistics.png")))); // NOI18N
+        btnThongKe.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Bar chart.png")))); // NOI18N
         btnThongKe.setText("Thống kê");
         btnThongKe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -115,71 +117,81 @@ public class MenuFrame extends javax.swing.JFrame {
         txtName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         txtRole.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txtName.setText(currentUser.getUserName());
-        Role role = currentUser.getRole();
-        role = role != null ? role : Role.USER;
-        txtRole.setText(role.toString());
+
+        jButton1.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-setting-24.png")))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(45, 45, 45)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel1)
-                                        .addComponent(jLabel2))
-                                .addGap(38, 38, 38)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtRole)
-                                        .addComponent(txtName))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(118, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(btnMTra, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(btnSach, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(90, 90, 90)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(btnThongKe, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(btnDG, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(105, 105, 105))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(252, 252, 252))))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtName)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtRole)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(67, 67, 67))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(118, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnMTra, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSach, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(90, 90, 90)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnThongKe, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDG, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(105, 105, 105))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(252, 252, 252))))
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(17, 17, 17)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtName))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtRole))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnThongKe, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel1)
-                                        .addComponent(txtName))
-                                .addGap(30, 30, 30)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel2)
-                                        .addComponent(txtRole))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(btnThongKe, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(btnSach, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(btnDG, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(36, 36, 36)
-                                                .addComponent(btnMTra, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(25, 25, 25))
+                                    .addComponent(btnSach, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnDG, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(36, 36, 36)
+                                .addComponent(btnMTra, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jButton1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDGActionPerformed
         // TODO add your handling code here:
-        QuanLyDocGia frame = new QuanLyDocGia(userService);
+        QuanLyDocGia frame = new QuanLyDocGia(userService,borrowBookService);
         AppUtil.setUpWindowListener(frame,this,null);
 
     }//GEN-LAST:event_btnDGActionPerformed
@@ -253,6 +265,7 @@ public class MenuFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnMTra;
     private javax.swing.JButton btnSach;
     private javax.swing.JButton btnThongKe;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel txtName;
