@@ -2,6 +2,7 @@ package com.mycompany.baitapnhom1.repository;
 
 import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
+import com.mycompany.baitapnhom1.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,4 +30,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     List<UserEntity> findAllByRole(Role role);
     Optional<UserEntity> findByUserNameAndPassword(String userName, String password);
     Optional<UserEntity> findByPersonalIdAndPassword(String id, String password);
+
+    @Query(value = "SELECT * FROM user_entity WHERE user_name LIKE :userName",nativeQuery = true)
+    List<UserEntity> findAllByUserNameContaining(@Param("userName") String userName);
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -119,21 +120,34 @@ public class UserService implements IUserService {
         }
     }
 
+    public List<UserEntity> findUserByUserNameContaining(String userName){
+        userName="%"+userName.trim()+"%";
+        try {
+            return userRepository.findAllByUserNameContaining(userName);
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @Override
     @Transactional
     public List<UserEntity> fetchAllUser(Role role) {
         List<UserEntity> users = GetUserController.getUser();
         users.forEach(user -> {
             try {
-                saveUser(user);
-            } catch (SQLException e) {
+                var existUser = userRepository.findByPersonalId(user.getPersonalId());
+                if (existUser.isEmpty()) {
+                    userRepository.save(user);
+                }
+            } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
         });
         return findAllUserByRole(Role.USER);
     }
 
-    public UserEntity findByIdOrUserName(String key) {
+    public List<UserEntity> findByIdOrUserName(String key) {
+        List<UserEntity> items = new ArrayList<>();
         if (key == null) {
             throw new RuntimeException("Please fill the require field");
         }
@@ -141,7 +155,8 @@ public class UserService implements IUserService {
         Pattern idPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = idPattern.matcher(key);
         if (matcher.matches()) {
-            return findUserByPersonalId(key);
-        } else return findUserByName(key);
+             items.add(findUserByPersonalId(key));
+             return items;
+        } else return findUserByUserNameContaining(key);
     }
 }

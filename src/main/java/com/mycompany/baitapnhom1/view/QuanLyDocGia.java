@@ -305,11 +305,13 @@ public class QuanLyDocGia extends javax.swing.JFrame {
 
     private void searchUser(String key ,List<UserEntity> items, Role role) {
         try {
-            var user = userService.findByIdOrUserName(key);
-            if (user.getRole() == role) {
-                items.add(user);
-                fetchData(items);
+            var users = userService.findByIdOrUserName(key);
+            for(UserEntity user : users){
+                if (user.getRole() == role) {
+                    items.add(user);
+                }
             }
+            fetchData(items);
         } catch (RuntimeException e) {
             JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
         }
