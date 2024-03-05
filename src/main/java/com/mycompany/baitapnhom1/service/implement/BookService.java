@@ -32,12 +32,20 @@ public class BookService implements IBookService {
     @Override
     public BookEntity findBookByName(String name) {
         try{
-            return bookRepository.findByBookName(name.trim());
+            return bookRepository.findByBookName(name);
         }catch (Exception e){
             throw new RuntimeException("An error occurs when trying to fetch books");
         }
     }
 
+    public List<BookEntity> findBookByNameContaining(String name) {
+        try{
+            return bookRepository.findAllByBookNameContaining(name);
+        }catch (Exception e){
+            throw new RuntimeException("An error occurs when trying to fetch books");
+
+        }
+    }
     @Override
     public List<BookEntity> findBooksByPublisher(String publisher) {
         try{
@@ -178,7 +186,7 @@ public class BookService implements IBookService {
         List<BookEntity> items = new ArrayList<>();
         switch (field){
             case BOOK_ID -> items.add(this.findBookByBookId(key));
-            case NAME -> items.add(this.findBookByName(key));
+            case NAME -> items.addAll(this.findBookByNameContaining(key));
             case CATEGORY -> items.addAll(this.findBooksByCategory(key));
             case AUTHOR -> items.addAll(this.findBookByAUthor(key));
             case PUBLISH_DATE -> items.addAll(this.findBookByYear(Integer.parseInt(key)));

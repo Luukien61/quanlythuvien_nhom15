@@ -19,6 +19,7 @@ public interface BookRepository extends JpaRepository<BookEntity, String> {
     Optional<BookEntity> findByBookId(String bookId);
     List<BookEntity> findAllByPublisher(String publisher);
     List<BookEntity> findAllByPublishDate(Date date);
+    List<BookEntity> findAllByBookNameContaining(String name);
     BookEntity findByBookName(String name);
     List<BookEntity> findByPublishDate(Date date);
     BookEntity findByBookIdAndBookName(String id, String name);
