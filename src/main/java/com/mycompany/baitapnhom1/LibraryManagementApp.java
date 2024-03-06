@@ -24,11 +24,11 @@ import java.sql.SQLException;
  */
 @SpringBootApplication
 @AllArgsConstructor
-public class Baitapnhom1 {
+public class LibraryManagementApp {
 
 
     public static void main(String[] args) {
-        var app = new SpringApplication(Baitapnhom1.class);
+        var app = new SpringApplication(LibraryManagementApp.class);
         app.setHeadless(false);
         app.setBannerMode(Banner.Mode.OFF);
         var context = app.run(args);

@@ -4,7 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class BookStatistic {
-    private Long quantity,total,rest,borrowed;
+    private final Long quantity;
+    private final Long total;
+    private final Long rest;
+    private final Long borrowed;
 
     public BookStatistic(long quantity,long total, long rest) {
         this.quantity=quantity;

@@ -2,7 +2,6 @@ package com.mycompany.baitapnhom1.repository;
 
 import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
-import com.mycompany.baitapnhom1.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
