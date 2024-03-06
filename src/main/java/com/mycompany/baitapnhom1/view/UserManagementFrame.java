@@ -137,12 +137,12 @@ public class UserManagementFrame extends javax.swing.JFrame {
     private void fetchExistUsers() {
         var currentUserRole = currentUser.getRole();
         switch (currentUserRole) {
-            case Role.ADMIN -> {
+            case ADMIN -> {
                 if (items==null || items.isEmpty()){
                     items=userService.findAllUserByRole(Role.MANAGER);
                 }
             }
-            case Role.MANAGER -> {
+            case MANAGER -> {
                 if (items==null || items.isEmpty()){
                     items=userService.findAllUserByRole(Role.USER);
                 }
