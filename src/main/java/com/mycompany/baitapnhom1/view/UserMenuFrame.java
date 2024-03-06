@@ -48,8 +48,10 @@ public class UserMenuFrame extends javax.swing.JFrame {
         try{
             borrows=borrowBookService.findAllByUser(currentUser.getPersonalId());
             borrowBookService.displayData(borrowTableModel,borrows,BookEntity::getBookName);
+            txtInfo.setVisible(false);
         }catch (RuntimeException e){
-            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
+            txtInfo.setVisible(true);
+            borrowTableModel.setRowCount(0);
         }
     }
 
@@ -102,6 +104,7 @@ public class UserMenuFrame extends javax.swing.JFrame {
         txtId = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        txtInfo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home");
@@ -250,6 +253,10 @@ public class UserMenuFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Mã sinh viên:");
 
+        txtInfo.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        txtInfo.setForeground(new java.awt.Color(51, 51, 51));
+        txtInfo.setText("You have not borrowed any book yet");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -272,6 +279,10 @@ public class UserMenuFrame extends javax.swing.JFrame {
                             .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(294, 294, 294)
+                .addComponent(txtInfo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,7 +300,9 @@ public class UserMenuFrame extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtId)
                             .addComponent(jLabel3))))
-                .addGap(56, 56, 56)
+                .addGap(28, 28, 28)
+                .addComponent(txtInfo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -402,6 +415,7 @@ public class UserMenuFrame extends javax.swing.JFrame {
     private javax.swing.JTable tableBorrowCard;
     private javax.swing.JTextField txtFilter;
     private javax.swing.JLabel txtId;
+    private javax.swing.JLabel txtInfo;
     private javax.swing.JLabel txtName;
     // End of variables declaration//GEN-END:variables
 }

@@ -15,12 +15,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 /**
  * @author kienl
@@ -42,7 +40,7 @@ public class UserManagementFrame extends javax.swing.JFrame {
         initUser();
         initTableModel();
         initBtn();
-        fetchExistUsers();
+        fetchStableUser();
         setUpRow();
         setLocationRelativeTo(null);
     }
@@ -87,7 +85,7 @@ public class UserManagementFrame extends javax.swing.JFrame {
                     try {
                         var user = userService.findUserByPersonalId(id);
                         if (userRole == Role.ADMIN) {
-                            addNewManager(user);
+                            actionWithManager(user);
                         } else {
                             displayUserBorrowFrame(user);
                         }
@@ -125,16 +123,16 @@ public class UserManagementFrame extends javax.swing.JFrame {
     }
 
 
-    private void fetchData(Supplier<List<UserEntity>> supplier) {
+    private void fetchUpdatedManager() {
         try {
-            List<UserEntity> items = supplier.get();
+            items = userService.findAllUserByRole(Role.MANAGER);
             fetchData(items);
         } catch (RuntimeException e) {
             JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
         }
     }
 
-    private void fetchExistUsers() {
+    private void fetchStableUser() {
         var currentUserRole = currentUser.getRole();
         switch (currentUserRole) {
             case ADMIN -> {
@@ -151,7 +149,7 @@ public class UserManagementFrame extends javax.swing.JFrame {
         fetchData(items);
     }
 
-    private void fetchNewUsers() {
+    private void fetchNewUsersFromServer() {
         try {
             items=userService.fetchAllUser(Role.USER);
             fetchData(items);
@@ -298,9 +296,9 @@ public class UserManagementFrame extends javax.swing.JFrame {
     private void btnActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionActionPerformed
         switch (this.userRole) {
             case ADMIN -> {
-                addNewManager(null);
+                actionWithManager(null);
             }
-            case MANAGER -> fetchNewUsers();
+            case MANAGER -> fetchNewUsersFromServer();
         }
     }//GEN-LAST:event_btnActionActionPerformed
 
@@ -327,9 +325,9 @@ public class UserManagementFrame extends javax.swing.JFrame {
         }
     }
 
-    private void addNewManager(UserEntity user) {
+    private void actionWithManager(UserEntity user) {
         AddLibrarianFrame frame = new AddLibrarianFrame(userService, user);
-        AppUtil.setUpWindowListener(frame, this, this::fetchExistUsers);
+        AppUtil.setUpWindowListener(frame, this, this::fetchUpdatedManager);
     }
 
 

@@ -8,7 +8,6 @@ import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.model.BookFields;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
-import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 
 import javax.swing.*;
@@ -16,7 +15,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author kienl
@@ -40,7 +38,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
         initRowFunction();
         initSearch();
         setLocationRelativeTo(null);
-        initData();
+        initNewData();
     }
 
     private void initSearch() {
@@ -108,7 +106,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
 
     private BookEntity getBookEntity(int selectedRow) {
         var model = tableSach.getModel();
-        var bookId = model.getValueAt(selectedRow, 0).toString();
+        var bookId = model.getValueAt(selectedRow, 1).toString();
         BookEntity book = null;
         try {
             book = bookService.findBookByBookId(bookId);
@@ -279,11 +277,11 @@ public class BookManagementFrame extends javax.swing.JFrame {
         );
         if (choose == JOptionPane.YES_OPTION) {
             var model = tableSach.getModel();
-            var bookId = model.getValueAt(selectedRow, 0).toString();
-            var bookName = model.getValueAt(selectedRow, 1).toString();
+            var bookId = model.getValueAt(selectedRow, 1).toString();
+            var bookName = model.getValueAt(selectedRow, 2).toString();
             try {
                 bookService.deleteBookByBookIdAndName(bookId, bookName);
-                initData();
+                initNewData();
                 JOptionPaneUtil.showMessageDialog("Deleted Successfully", 1500, jScrollPane2);
             } catch (RuntimeException e) {
                 JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
@@ -297,7 +295,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     setVisible(true);
-                    initData();
+                    initNewData();
                 }
             };
         }
@@ -317,10 +315,12 @@ public class BookManagementFrame extends javax.swing.JFrame {
         snpSearch.setSelectedIndex(0);
     }
 
-    private void initData() {
-        if(items==null || items.isEmpty()){
-            items = bookService.findAllBook();
-        }
+    private void initStableData() {
+        initData(items);
+    }
+
+    private void initNewData(){
+        items=bookService.findAllBook();
         initData(items);
     }
 
@@ -361,7 +361,6 @@ public class BookManagementFrame extends javax.swing.JFrame {
                     var books = bookService.searchBookByField(field, key);
                     if (books.getFirst() != null) {
                         items.addAll(books);
-                        initData(items);
                     } else throw new RuntimeException("Không tìm thấy sách");
                 } catch (RuntimeException e) {
                     JOptionPane.showMessageDialog(
@@ -372,6 +371,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
                     );
                 }
             }
+            initData(items);
         } else {
             JOptionPaneUtil.showErrorDialog("Please fill the require fields", this);
 
@@ -383,7 +383,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_snpSearchActionPerformed
 
     private void btnFetchAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFetchAllActionPerformed
-        initData();
+        initStableData();
     }//GEN-LAST:event_btnFetchAllActionPerformed
 
     /**
