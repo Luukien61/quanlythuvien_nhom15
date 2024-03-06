@@ -181,7 +181,7 @@ public class DangNhap extends javax.swing.JFrame {
                 AppUtil.setCurrentUser(user);
                 JFrame frame;
                 if(user.getRole()== Role.USER){
-                    frame = new UserMenu2Frame(bookService,borrowBookService);
+                    frame = new UserMenuFrame(bookService,borrowBookService);
                 }else {
                     frame = new MenuFrame(userService,bookService,borrowBookService);
                 }

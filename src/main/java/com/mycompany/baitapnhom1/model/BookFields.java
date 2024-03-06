@@ -14,7 +14,7 @@ public enum BookFields {
     PUBLISHER("Nhà xuất bản"),
     PUBLISH_DATE("Năm xuất bản"),
     TOTAL_QUANTITY("Tổng số lượng"),
-    AVAILABLE_QUANTITY("Số lượng kho");
+    AVAILABLE_QUANTITY("Có sẵn");
     private final String fieldName;
 
     @Override

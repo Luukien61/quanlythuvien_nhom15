@@ -89,9 +89,9 @@ public class BookService implements IBookService {
     @Override
     public List<BookEntity> findBooksByCategory(String category) {
         try {
-            category = category.trim().toUpperCase();
-            var bookCategory = BookCategory.valueOf(category);
-            return bookRepository.findAllByCategory(bookCategory);
+            category = "%"+category.trim().toUpperCase()+"%";
+            //var bookCategory = BookCategory.valueOf(category);
+            return bookRepository.findAllByCategoryContaining(category);
         } catch (Exception e) {
             throw new RuntimeException("An error occurs when trying to fetch books");
         }
@@ -214,7 +214,6 @@ public class BookService implements IBookService {
 
     public BookStatistic getQuantityStatistic() {
         try {
-            var date = new Date();
             return bookRepository.findBookStatistic();
         } catch (Exception e) {
             throw new RuntimeException("An error occurs when fetching data");

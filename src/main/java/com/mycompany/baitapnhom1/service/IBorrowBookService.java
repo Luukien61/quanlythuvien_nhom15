@@ -6,6 +6,7 @@ import com.mycompany.baitapnhom1.entity.UserEntity;
 
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import java.util.function.Function;
 
 public interface IBorrowBookService {
     void saveNew(BorrowFormEntity item);
@@ -17,6 +18,6 @@ public interface IBorrowBookService {
     void deleteItem(String id);
     List<BorrowFormEntity> findAllByUserIdAndBookId(String userId, String bookId);
     void returnBook(String borrowId);
-    void displayData(DefaultTableModel model, List<BorrowFormEntity> items);
+    void displayData(DefaultTableModel model, List<BorrowFormEntity> items, Function<BookEntity,String> function);
 
 }

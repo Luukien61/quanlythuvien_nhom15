@@ -187,7 +187,7 @@ public class MenuFrame extends javax.swing.JFrame {
 
     private void btnDGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDGActionPerformed
         // TODO add your handling code here:
-        QuanLyDocGia frame = new QuanLyDocGia(userService,borrowBookService);
+        UserManagementFrame frame = new UserManagementFrame(userService,borrowBookService);
         AppUtil.setUpWindowListener(frame,this,null);
 
     }//GEN-LAST:event_btnDGActionPerformed

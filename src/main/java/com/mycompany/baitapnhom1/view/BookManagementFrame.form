@@ -80,13 +80,13 @@
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jScrollPane2" min="-2" pref="312" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="snpSearch" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="txtSearch" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="btnSearch" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="45" max="32767" attributes="0"/>
+              <EmptySpace pref="27" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnAdd" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="btnExist" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
@@ -211,7 +211,7 @@
     <Component class="javax.swing.JButton" name="btnSearch">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/image/Search.png"/>
+          <Image iconType="3" name="/image/icons8-search-24.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="T&#xec;m ki&#x1ebf;m"/>
       </Properties>
@@ -222,7 +222,7 @@
     <Component class="javax.swing.JButton" name="btnAdd">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/image/Add.png"/>
+          <Image iconType="3" name="/image/icons8-add-24.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Th&#xea;m m&#x1edb;i"/>
       </Properties>
@@ -233,7 +233,7 @@
     <Component class="javax.swing.JButton" name="btnExist">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/image/Exit.png"/>
+          <Image iconType="3" name="/image/icons8-exit-24.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Tho&#xe1;t"/>
       </Properties>
@@ -244,7 +244,7 @@
     <Component class="javax.swing.JButton" name="btnFetchAll">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/image/Refresh.png"/>
+          <Image iconType="3" name="/image/icons8-replace-24.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
       </Properties>
