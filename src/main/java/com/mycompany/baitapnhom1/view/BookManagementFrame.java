@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author kienl
@@ -23,8 +24,10 @@ import java.util.List;
 public class BookManagementFrame extends javax.swing.JFrame {
 
     private final BookService bookService;
-    private final UserService userService;
+//    private final UserService userService;
     private List<BookEntity> items;
+    private DefaultTableModel model;
+
     private WindowListener windowListener = null;
 
     /**
@@ -32,7 +35,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
      */
     public BookManagementFrame(BookService bookService, UserService userService) {
         this.bookService = bookService;
-        this.userService = userService;
+        //this.userService = userService;
         initComponents();
         initRowFunction();
         initSearch();
@@ -53,6 +56,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
     }
 
     private void initRowFunction() {
+        model=(DefaultTableModel) tableSach.getModel();
         JPopupMenu popupMenu = new JPopupMenu();
         JMenuItem deleteItem = new JMenuItem("Xoá");
         JMenuItem updateItem = new JMenuItem("Sửa");
@@ -179,7 +183,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
             }
         });
 
-        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Search.png"))); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-search-24.png")))); // NOI18N
         btnSearch.setText("Tìm kiếm");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -187,7 +191,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
             }
         });
 
-        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Add.png"))); // NOI18N
+        btnAdd.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-add-24.png")))); // NOI18N
         btnAdd.setText("Thêm mới");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -195,7 +199,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
             }
         });
 
-        btnExist.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Exit.png"))); // NOI18N
+        btnExist.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-exit-24.png")))); // NOI18N
         btnExist.setText("Thoát");
         btnExist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,7 +207,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
             }
         });
 
-        btnFetchAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Refresh.png"))); // NOI18N
+        btnFetchAll.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-refresh-24.png")))); // NOI18N
         btnFetchAll.setText("Làm mới");
         btnFetchAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -302,21 +306,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
 
     private void initData(List<BookEntity> items) {
         try {
-            var defaultTableModel = (DefaultTableModel) tableSach.getModel();
-            defaultTableModel.setRowCount(0);
-            int index =1 ;
-            for (BookEntity book : items) {
-                var date = book.getPublishDate();
-                var data = new Object[]{
-                        String.valueOf(index),
-                        book.getBookId(), book.getBookName(), book.getTotalQuantity(),
-                        book.getRestQuantity(), book.getAuthor(), book.getCategory(),
-                        book.getPublisher(), AppUtil.getPublishDateString(date)
-                };
-                defaultTableModel.addRow(data);
-                index+=1;
-            }
-            clearText();
+           bookService.displayBooks(model,this::clearText,items);
         } catch (RuntimeException e) {
             JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
         }
@@ -369,8 +359,6 @@ public class BookManagementFrame extends javax.swing.JFrame {
                     var books = bookService.searchBookByField(field, key);
                     if (books.getFirst() != null) {
                         items.addAll(books);
-                    }
-                    if (!items.isEmpty()) {
                         initData(items);
                     } else throw new RuntimeException("Không tìm thấy sách");
                 } catch (RuntimeException e) {

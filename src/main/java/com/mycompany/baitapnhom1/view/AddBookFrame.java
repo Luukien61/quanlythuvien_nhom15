@@ -102,7 +102,7 @@ public class AddBookFrame extends javax.swing.JFrame {
 
         jLabel8.setText("Số lượng");
 
-        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Add.png"))); // NOI18N
+        btnAdd.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-add-24.png")))); // NOI18N
         btnAdd.setText("Thêm ");
         btnAdd.setFocusable(false);
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -111,7 +111,7 @@ public class AddBookFrame extends javax.swing.JFrame {
             }
         });
 
-        btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/exit-full-screen.png"))); // NOI18N
+        btnCancel.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-exit-24.png")))); // NOI18N
         btnCancel.setText("Huỷ");
         btnCancel.setFocusable(false);
         btnCancel.addActionListener(new java.awt.event.ActionListener() {

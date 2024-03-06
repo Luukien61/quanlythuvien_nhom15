@@ -50,11 +50,11 @@ public class QuanLyDocGia extends javax.swing.JFrame {
         switch (this.userRole) {
             case ADMIN -> {
                 this.btnAction.setText("Thêm");
-                this.btnAction.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Add.png"))));
+                this.btnAction.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-add-24.png"))));
             }
             case MANAGER -> {
                 this.btnAction.setText("Làm mới");
-                this.btnAction.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Documents.png"))));
+                this.btnAction.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-refresh-24.png"))));
             }
         }
     }
@@ -201,7 +201,7 @@ public class QuanLyDocGia extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 0, 51));
         jLabel1.setText(title);
 
-        btnAction.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Refresh.png")))); // NOI18N
+        btnAction.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-refresh-24.png")))); // NOI18N
         btnAction.setText("Làm mới");
         btnAction.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,7 +209,7 @@ public class QuanLyDocGia extends javax.swing.JFrame {
             }
         });
 
-        btnExit.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Exit.png")))); // NOI18N
+        btnExit.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-exit-24.png")))); // NOI18N
         btnExit.setText("Thoát");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,7 +217,7 @@ public class QuanLyDocGia extends javax.swing.JFrame {
             }
         });
 
-        btnSearch.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Search.png")))); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-search-24.png")))); // NOI18N
         btnSearch.setText("Tìm kiếm");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

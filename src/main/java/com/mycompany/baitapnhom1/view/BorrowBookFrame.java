@@ -91,7 +91,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
 
     private void deleteBorrowItem(int selectedRow) {
         var state = model.getValueAt(selectedRow, 7);
-        if (ReturnState.NOT_YET.getState().equals(state)) {
+        if (ReturnState.NOT_YET.getState().equals(state) || state.equals(ReturnState.EXPIRED.getState())) {
             JOptionPaneUtil.showErrorDialog("Please return the book before deleting this item", this);
         } else {
             var choose = JOptionPane.showConfirmDialog(
@@ -156,7 +156,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Mã sách");
 
-        btnAdd.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Create.png")))); // NOI18N
+        btnAdd.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-add-24.png")))); // NOI18N
         btnAdd.setText("Mượn");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,7 +164,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
             }
         });
 
-        btnSearch.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/Search.png")))); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-search-24.png")))); // NOI18N
         btnSearch.setText("Tìm kiếm");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,7 +217,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
             }
         });
 
-        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Refresh.png"))); // NOI18N
+        btnRefresh.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-refresh-24.png")))); // NOI18N
         btnRefresh.setText("Làm mới");
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -358,6 +358,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_snpTimeActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        borrowBookService.expireBorrowForm();
         fetchAllData();
     }//GEN-LAST:event_btnRefreshActionPerformed
 

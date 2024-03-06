@@ -7,6 +7,7 @@ package com.mycompany.baitapnhom1.view;
 import javax.swing.*;
 
 import com.mycompany.baitapnhom1.Baitapnhom1;
+import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.model.ResultModel;
 import com.mycompany.baitapnhom1.service.implement.BookService;
@@ -62,10 +63,10 @@ public class DangNhap extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Quản lý thư viện");
 
-        lbMK.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(Baitapnhom1.class.getResource("/image/Lock.png")))); // NOI18N
+        lbMK.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(Baitapnhom1.class.getResource("/image/icons8-password-24 (2).png")))); // NOI18N
         lbMK.setText("Mật khẩu");
 
-        lbTK.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(Baitapnhom1.class.getResource("/image/User.png")))); // NOI18N
+        lbTK.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(Baitapnhom1.class.getResource("/image/icons8-user-default-24.png")))); // NOI18N
         lbTK.setText("Tên tài  khoản");
 
         txtTK.addActionListener(new java.awt.event.ActionListener() {
@@ -80,7 +81,7 @@ public class DangNhap extends javax.swing.JFrame {
             }
         });
 
-        btnExit.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(Baitapnhom1.class.getResource("/image/exit-full-screen.png")))); // NOI18N
+        btnExit.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(Baitapnhom1.class.getResource("/image/icons8-cancel-24 (1).png")))); // NOI18N
         btnExit.setText("Thoát");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,7 +89,7 @@ public class DangNhap extends javax.swing.JFrame {
             }
         });
 
-        btnLogin.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(Baitapnhom1.class.getResource("/image/icons8-login-48.png")))); // NOI18N
+        btnLogin.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(Baitapnhom1.class.getResource("/image/icons8-log-in-24.png")))); // NOI18N
         btnLogin.setText("Đăng nhập");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -176,10 +177,15 @@ public class DangNhap extends javax.swing.JFrame {
         if(!id.isEmpty()&& !pass.isEmpty()){
             var data = checkUser(id,pass);
             if(data.getData()!=null){
-                AppUtil.setCurrentUser((UserEntity) data.getData());
-                MenuFrame main = new MenuFrame(userService,bookService,borrowBookService);
-                main.setVisible(true);
-                this.dispose();
+                var user =(UserEntity) data.getData();
+                AppUtil.setCurrentUser(user);
+                JFrame frame;
+                if(user.getRole()== Role.USER){
+                    frame = new UserMenu2Frame(bookService,borrowBookService);
+                }else {
+                    frame = new MenuFrame(userService,bookService,borrowBookService);
+                }
+                AppUtil.setUpWindowListener(frame,this,this::resetForm);
             }
             else{
                 resetForm();

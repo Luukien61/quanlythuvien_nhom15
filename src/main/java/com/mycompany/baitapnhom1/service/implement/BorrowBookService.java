@@ -4,6 +4,7 @@ import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
 import com.mycompany.baitapnhom1.repository.BorrowBookRepository;
 import com.mycompany.baitapnhom1.service.IBorrowBookService;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
-import static com.mycompany.baitapnhom1.entity.ReturnState.NOT_YET;
-import static com.mycompany.baitapnhom1.entity.ReturnState.RETURNED;
+import static com.mycompany.baitapnhom1.entity.ReturnState.*;
 
 @Service
 @AllArgsConstructor
@@ -125,6 +125,7 @@ public class BorrowBookService implements IBorrowBookService {
             throw new RuntimeException(e);
         }
     }
+    @Override
     public void displayData(DefaultTableModel model, List<BorrowFormEntity> items){
         int index = 1;
         LocalDate borrowDate;
@@ -147,4 +148,9 @@ public class BorrowBookService implements IBorrowBookService {
             index += 1;
         }
     }
+    @Transactional
+    public void expireBorrowForm(){
+        borrowBookRepository.expireBorrowForm(EXPIRED,new Date(),NOT_YET);
+    }
+
 }
