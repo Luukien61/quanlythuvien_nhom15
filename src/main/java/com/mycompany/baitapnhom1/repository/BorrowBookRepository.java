@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,8 @@ public interface BorrowBookRepository extends JpaRepository<BorrowFormEntity, St
 
     @Query(value = "SELECT COUNT(*) FROM borrow_form_entity WHERE state='EXPIRED'", nativeQuery = true)
     long findBorrowFormExpiredCount();
+
+    List<BorrowFormEntity> findAllByState(ReturnState state);
 
     @Query(value = "select b from BorrowFormEntity b where b.expiredDate > :currentDate and b.state= :state")
     List<BorrowFormEntity> findExpiredBorrowedForm(

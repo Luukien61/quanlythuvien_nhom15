@@ -4,16 +4,23 @@
  */
 package com.mycompany.baitapnhom1.view;
 
+import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
 import com.mycompany.baitapnhom1.model.BookStatistic;
-import com.mycompany.baitapnhom1.model.StatisticFilter;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author kienl
@@ -22,7 +29,9 @@ public class StatisticFrame extends javax.swing.JFrame {
 
     private final BookService bookService;
     private final BorrowBookService borrowBookService;
-    private DefaultTableModel tableModel;
+    private ChartPanel chartPanel;
+    private BookStatistic statistic;
+
 
 
     /**
@@ -31,16 +40,64 @@ public class StatisticFrame extends javax.swing.JFrame {
     public StatisticFrame(BookService bookService, BorrowBookService borrowBookService) throws HeadlessException {
         this.bookService = bookService;
         this.borrowBookService = borrowBookService;
+        statistic = bookService.getQuantityStatistic();
+        chartPanel=new ChartPanel( createChart(createDataset(statistic.getBorrowed(),statistic.getRest())));
         initComponents();
-        initFilter();
-        fetchCommonStatistic();
+        initData();
     }
 
-    private void initFilter() {
-        DefaultComboBoxModel<StatisticFilter> model = (DefaultComboBoxModel) snpFilter.getModel();
-        var values = StatisticFilter.values();
-        Arrays.stream(values).toList().forEach(model::addElement);
+    private void initData() {
+        txtTotal.setText(String.valueOf(statistic.getTotal()));
+        txtBorrowed.setText(String.valueOf(statistic.getBorrowed()));
+        txtAvailable.setText(String.valueOf(statistic.getRest()));
+        var items = borrowBookService.findAllExpiredBorrowedForm();
+        txtExpired.setText(String.valueOf(items.size()));
+        DefaultTableModel model = (DefaultTableModel) tableContent.getModel();
+        LocalDate borrowDate;
+        LocalDate returnDate;
+        int index=1;
+        var currentDate= new Date();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        model.setRowCount(0);
+        for (BorrowFormEntity item : items) {
+            borrowDate = item.getBorrowDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            returnDate = item.getExpiredDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            var data = new Object[]{
+                    index,
+                    item.getBorrowId(),
+                    item.getUser().getPersonalId(),
+                    item.getBook().getBookId(),
+                    borrowDate.format(dateTimeFormatter),
+                    returnDate.format(dateTimeFormatter),
+                    item.getState().getState(),
+                    dayDiff(returnDate,currentDate)
+            };
+            model.addRow(data);
+            index += 1;
+        }
     }
+
+
+    private static JFreeChart createChart(PieDataset dataset) {
+        return ChartFactory.createPieChart(
+                "SỐ LƯỢNG SÁCH CỦA THƯ VIỆN", dataset, true, true, true);
+    }
+
+    private static PieDataset createDataset(long borrowed, long available) {
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        dataset.setValue("Đang mượn", borrowed);
+        dataset.setValue("Hiện có", available);
+        return dataset;
+    }
+
+
+    private long dayDiff(LocalDate date1, Date date2){
+        var returnDate= Date.from(date1.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        long timeDiff = Math.abs(returnDate.getTime()-date2.getTime());
+        return TimeUnit.DAYS.convert(timeDiff,TimeUnit.MILLISECONDS);
+    }
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,11 +108,18 @@ public class StatisticFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        snpFilter = new javax.swing.JComboBox<>();
-        btnFilter = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        jscoll = new javax.swing.JScrollPane();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtTotal = new javax.swing.JLabel();
+        txtBorrowed = new javax.swing.JLabel();
+        txtAvailable = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         tableContent = new javax.swing.JTable();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel6 = new javax.swing.JLabel();
+        txtExpired = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Thống kê");
@@ -64,113 +128,132 @@ public class StatisticFrame extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 0, 51));
         jLabel1.setText("Thống kê");
 
-        snpFilter.setBackground(new java.awt.Color(255, 255, 255));
-        snpFilter.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("jLabel2");
 
-        btnFilter.setIcon(new javax.swing.ImageIcon(Objects.requireNonNull(getClass().getResource("/image/icons8-filter-24.png")))); // NOI18N
-        btnFilter.setText("Lọc");
-        btnFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFilterActionPerformed(evt);
-            }
-        });
+        jLabel3.setText("Tổng số sách:");
+
+        jLabel4.setText("Đang mượn:");
+
+        jLabel5.setText("Hiện có:");
+
+        txtTotal.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        txtTotal.setForeground(new java.awt.Color(0, 0, 0));
+        txtTotal.setText("jLabel6");
+
+        txtBorrowed.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        txtBorrowed.setForeground(new java.awt.Color(0, 0, 0));
+        txtBorrowed.setText("jLabel7");
+
+        txtAvailable.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        txtAvailable.setForeground(new java.awt.Color(0, 0, 0));
+        txtAvailable.setText("jLabel8");
 
         tableContent.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String[]{
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Stt", "Mã phiếu mượn", "Mã sinh viên", "Mã sách", "Ngày mượn", "Ngày hẹn trả", "Trạng thái", "Số ngày"
+            }
         ) {
-            boolean[] canEdit = new boolean[]{
-                    false, false, false, false
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+                return canEdit [columnIndex];
             }
         });
-        jscoll.setViewportView(tableContent);
+        jScrollPane1.setViewportView(tableContent);
+        if (tableContent.getColumnModel().getColumnCount() > 0) {
+            tableContent.getColumnModel().getColumn(0).setResizable(false);
+            tableContent.getColumnModel().getColumn(0).setPreferredWidth(30);
+        }
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 0, 51));
+        jLabel6.setText("Sách mượn quá hạn:");
+
+        txtExpired.setText("jLabel7");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jscoll, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
-                                .addContainerGap())
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(52, 52, 52)
-                                .addComponent(snpFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnFilter)
-                                .addGap(114, 114, 114))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel1)
-                                .addGap(231, 231, 231))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jSeparator1)
-                                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtTotal)
+                    .addComponent(txtBorrowed)
+                    .addComponent(txtAvailable))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 153, Short.MAX_VALUE)
+                .addComponent(chartPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSeparator1)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel6)
+                        .addGap(33, 33, 33)
+                        .addComponent(txtExpired))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(299, 299, 299)
+                        .addComponent(jLabel1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(23, 23, 23)
-                                .addComponent(jLabel1)
-                                .addGap(38, 38, 38)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(snpFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(15, 15, 15)
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(jscoll, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
-                                .addGap(18, 18, 18))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(jLabel1)
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(chartPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtTotal)
+                            .addComponent(jLabel3))
+                        .addGap(60, 60, 60)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(txtBorrowed))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(txtAvailable))))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtExpired))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilterActionPerformed
-        var filter = (StatisticFilter) snpFilter.getSelectedItem();
-        switch (filter) {
-            case ALL -> fetchCommonStatistic();
 
-        }
-    }//GEN-LAST:event_btnFilterActionPerformed
-
-    private void fetchCommonStatistic() {
-        var bookStatistic = bookService.getQuantityStatistic();
-        setTableModel(BookStatistic.getTitle());
-        tableModel.addRow(
-                new Object[]{
-                        bookStatistic.getQuantity(),
-                        bookStatistic.getTotal(),
-                        bookStatistic.getRest(),
-                        bookStatistic.getBorrowed()
-                }
-        );
-    }
-
-    private void setTableModel(String[] columns) {
-        tableContent.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                columns
-        ) {
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return false;
-            }
-        });
-        this.tableModel = (DefaultTableModel) tableContent.getModel();
-        tableModel.setRowCount(0);
-    }
 
 //    /**
 //     * @param args the command line arguments
@@ -208,11 +291,18 @@ public class StatisticFrame extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnFilter;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JScrollPane jscoll;
-    private javax.swing.JComboBox<String> snpFilter;
     private javax.swing.JTable tableContent;
+    private javax.swing.JLabel txtAvailable;
+    private javax.swing.JLabel txtBorrowed;
+    private javax.swing.JLabel txtExpired;
+    private javax.swing.JLabel txtTotal;
     // End of variables declaration//GEN-END:variables
 }

@@ -154,4 +154,8 @@ public class BorrowBookService implements IBorrowBookService {
         borrowBookRepository.expireBorrowForm(EXPIRED, new Date(), NOT_YET);
     }
 
+    public List<BorrowFormEntity> findAllExpiredBorrowedForm(){
+        return borrowBookRepository.findAllByState(EXPIRED);
+    }
+
 }
