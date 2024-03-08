@@ -1,9 +1,11 @@
 package com.mycompany.baitapnhom1.service.implement;
 
+import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
 import com.mycompany.baitapnhom1.repository.BorrowBookRepository;
 import com.mycompany.baitapnhom1.service.IBorrowBookService;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +15,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 
-import static com.mycompany.baitapnhom1.entity.ReturnState.NOT_YET;
-import static com.mycompany.baitapnhom1.entity.ReturnState.RETURNED;
+import static com.mycompany.baitapnhom1.entity.ReturnState.*;
 
 @Service
 @AllArgsConstructor
@@ -74,14 +76,10 @@ public class BorrowBookService implements IBorrowBookService {
     }
 
     @Override
-    public List<BorrowFormEntity> findAllByUser(String userId) {
-        try{
-            var items = borrowBookRepository.findAllByUser(userId);
-            if(!items.isEmpty()) return items;
-            throw new RuntimeException("This user has not borrowed any books yet");
-        }catch (Exception e){
-            throw new RuntimeException(e.getMessage());
-        }
+    public List<BorrowFormEntity> findAllByUser(String userId) throws RuntimeException {
+        var items = borrowBookRepository.findAllByUser(userId.trim().toUpperCase());
+        if (!items.isEmpty()) return items;
+        throw new RuntimeException("This user has not borrowed any books yet");
     }
 
     @Override
@@ -120,16 +118,19 @@ public class BorrowBookService implements IBorrowBookService {
             var quantity = item.getQuantity();
             item.setState(RETURNED);
             borrowBookRepository.save(item);
-            bookService.updateQuantity(book,-quantity);
-        }catch (RuntimeException e){
+            bookService.updateQuantity(book, -quantity);
+        } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
     }
-    public void displayData(DefaultTableModel model, List<BorrowFormEntity> items){
+
+    @Override
+    public void displayData(DefaultTableModel model, List<BorrowFormEntity> items, Function<BookEntity,String> function) {
         int index = 1;
         LocalDate borrowDate;
         LocalDate returnDate;
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        model.setRowCount(0);
         for (BorrowFormEntity item : items) {
             borrowDate = item.getBorrowDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             returnDate = item.getExpiredDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -137,7 +138,7 @@ public class BorrowBookService implements IBorrowBookService {
                     index,
                     item.getBorrowId(),
                     item.getUser().getPersonalId(),
-                    item.getBook().getBookId(),
+                    function.apply(item.getBook()),
                     item.getQuantity(),
                     borrowDate.format(dateTimeFormatter),
                     returnDate.format(dateTimeFormatter),
@@ -147,4 +148,14 @@ public class BorrowBookService implements IBorrowBookService {
             index += 1;
         }
     }
+
+    @Transactional
+    public void expireBorrowForm() {
+        borrowBookRepository.expireBorrowForm(EXPIRED, new Date(), NOT_YET);
+    }
+
+    public List<BorrowFormEntity> findAllExpiredBorrowedForm(){
+        return borrowBookRepository.findAllByState(EXPIRED);
+    }
+
 }

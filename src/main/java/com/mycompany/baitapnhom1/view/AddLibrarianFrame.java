@@ -167,12 +167,11 @@ public class AddLibrarianFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-
-        var uerId = txtId.getText().trim().toUpperCase();
+        var userId = txtId.getText().trim().toUpperCase();
         var userName = txtName.getText().trim();
         var password = txtPassword.getText().trim();
         var user = UserEntity.builder()
-                .personalId(uerId)
+                .personalId(userId)
                 .userName(userName)
                 .role(Role.MANAGER)
                 .password(password)
@@ -183,12 +182,11 @@ public class AddLibrarianFrame extends javax.swing.JFrame {
                 clearText();
                 JOptionPaneUtil.showMessageDialog("Added successfully", 800,this);
             } else {
-                userService.updateUser(user, currentUser.getPersonalId());
+                userService.updateUser(userId,userName,Role.MANAGER,password, currentUser.getPersonalId());
                 JOptionPaneUtil.showMessageDialog("Update successfully", 800, null);
                 dispose();
             }
-
-        } catch (IllegalArgumentException | SQLException e) {
+        } catch (Exception e) {
             JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
         }
 

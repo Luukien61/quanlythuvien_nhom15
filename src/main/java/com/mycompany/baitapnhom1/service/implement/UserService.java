@@ -6,10 +6,12 @@ import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.repository.UserRepository;
 import com.mycompany.baitapnhom1.service.IUserService;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,10 +34,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserEntity findUserByName(String userName)  {
+    public UserEntity findUserByName(String userName) {
         try {
             return userRepository.findByUserName(userName.trim())
-                    .orElseThrow(()-> new RuntimeException("There no result matching"));
+                    .orElseThrow(() -> new RuntimeException("There no result matching"));
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -44,7 +46,7 @@ public class UserService implements IUserService {
     @Override
     public UserEntity findUserByPersonalId(String id) throws RuntimeException {
         try {
-            if(id==null){
+            if (id == null) {
                 throw new RuntimeException("Please fill the require filed");
             }
             return userRepository.findByPersonalId(id.trim().toUpperCase())
@@ -63,31 +65,30 @@ public class UserService implements IUserService {
             return false;
         }
     }
+
     @Transactional
-    public void deleteUserById(String id){
-        try{
+    public void deleteUserById(String id) {
+        try {
             userRepository.deleteById(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
+    @Transactional
     @Override
-    public void updateUser(UserEntity newUser, String id) throws SQLException {
+    public void updateUser(String newPersonalId, String userName, Role role, String password, String id) throws RuntimeException {
         try {
             var existUser = userRepository.findByPersonalId(id);
             if (existUser.isPresent()) {
-                var user = existUser.get();
-                user.setUserName(newUser.getUserName());
-                user.setPassword(newUser.getPassword());
-                user.setPersonalId(newUser.getPersonalId());
-                user.setRole(newUser.getRole());
-                userRepository.save(user);
+                userRepository.updateByPersonalId(newPersonalId, password, userName, role.name(), id);
             } else {
-                throw new SQLException("The User doesn't exist ");
+                throw new RuntimeException("The user doesn't exist ");
             }
-        } catch (SQLException e) {
-            throw new SQLException("Sorry, an error occurs when finding the user");
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("The user personal ID is identical with another user's ID");
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -119,30 +120,43 @@ public class UserService implements IUserService {
         }
     }
 
+    public List<UserEntity> findUserByUserNameContaining(String userName){
+        userName="%"+userName.trim()+"%";
+        try {
+            return userRepository.findAllByUserNameContaining(userName);
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @Override
     @Transactional
     public List<UserEntity> fetchAllUser(Role role) {
         List<UserEntity> users = GetUserController.getUser();
         users.forEach(user -> {
             try {
-                saveUser(user);
-            } catch (SQLException e) {
+                var existUser = userRepository.findByPersonalId(user.getPersonalId());
+                if (existUser.isEmpty()) {
+                    userRepository.save(user);
+                }
+            } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
         });
         return findAllUserByRole(Role.USER);
     }
 
-    public UserEntity findByIdOrUserName(String key){
-        if(key==null){
+    public List<UserEntity> findByIdOrUserName(String key) {
+        List<UserEntity> items = new ArrayList<>();
+        if (key == null) {
             throw new RuntimeException("Please fill the require field");
         }
         String regex = "^[CAD]T.*";
-        Pattern idPattern = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
+        Pattern idPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = idPattern.matcher(key);
-        if(matcher.matches()){
-            return findUserByPersonalId(key);
-        }
-        else return findUserByName(key);
+        if (matcher.matches()) {
+             items.add(findUserByPersonalId(key));
+             return items;
+        } else return findUserByUserNameContaining(key);
     }
 }

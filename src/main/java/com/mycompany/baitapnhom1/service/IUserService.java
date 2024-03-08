@@ -9,11 +9,11 @@ import java.util.List;
 public interface IUserService {
     void saveUser(UserEntity user) throws SQLException;
     UserEntity findUserByName(String userName) throws SQLException;
-    public List<UserEntity> fetchAllUser(Role role);
+    List<UserEntity> fetchAllUser(Role role);
     UserEntity findUserByPersonalId(String id) throws SQLException;
     boolean deleteUser(UserEntity user);
-    public void deleteUserById(String id);
-    void updateUser(UserEntity newUser, String id) throws SQLException;
+    void deleteUserById(String id);
+    void updateUser(String newPersonalId,String userName,Role role, String password, String id) throws SQLException;
     List<UserEntity> findAllUser();
     List<UserEntity> findAllUserByRole(Role role);
     UserEntity findUserByUserIdAndPassword(String id, String password) throws SQLException;
