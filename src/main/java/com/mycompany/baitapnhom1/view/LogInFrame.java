@@ -24,7 +24,7 @@ import java.util.Objects;
  * @author DELL
  */
 
-public class DangNhap extends javax.swing.JFrame {
+public class LogInFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form DangNhap
@@ -34,7 +34,7 @@ public class DangNhap extends javax.swing.JFrame {
     private final BookService bookService;
     private final BorrowBookService borrowBookService;
 
-    public DangNhap(UserService userService,BookService bookService,BorrowBookService borrowBookService) {
+    public LogInFrame(UserService userService,BookService bookService,BorrowBookService borrowBookService) {
         initComponents();
         setLocationRelativeTo(null);
         this.userService=userService;
