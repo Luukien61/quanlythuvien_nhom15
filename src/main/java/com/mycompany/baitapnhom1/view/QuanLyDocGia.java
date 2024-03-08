@@ -137,8 +137,8 @@ public class QuanLyDocGia extends javax.swing.JFrame {
     private void fetchExistUsers() {
         var currentUserRole = currentUser.getRole();
         switch (currentUserRole) {
-            case Role.ADMIN -> fetchData(() -> userService.findAllUserByRole(Role.MANAGER));
-            case Role.MANAGER -> fetchData(() -> userService.findAllUserByRole(Role.USER));
+            case ADMIN -> fetchData(() -> userService.findAllUserByRole(Role.MANAGER));
+            case MANAGER -> fetchData(() -> userService.findAllUserByRole(Role.USER));
         }
     }
 

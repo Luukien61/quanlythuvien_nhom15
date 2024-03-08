@@ -17,7 +17,7 @@ public class NetworkUtil {
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
                     InetAddress addr = addresses.nextElement();
-                    if (addr instanceof Inet4Address && iface.getDisplayName().contains("Wireless-AC")) {
+                    if (addr instanceof Inet4Address && iface.getDisplayName().contains("Network")) {
                         return addr.getHostAddress();
                     }
                 }
