@@ -21,7 +21,7 @@ import java.util.Objects;
 
 /**
  *
- * @author DELL
+ * @author kienl
  */
 
 public class LogInFrame extends javax.swing.JFrame {
