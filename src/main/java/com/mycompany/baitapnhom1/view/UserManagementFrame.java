@@ -40,7 +40,7 @@ public class UserManagementFrame extends javax.swing.JFrame {
         initUser();
         initTableModel();
         initBtn();
-        fetchStableUser();
+        fetchUsersFromDB();
         setUpRow();
         setLocationRelativeTo(null);
     }
@@ -132,17 +132,17 @@ public class UserManagementFrame extends javax.swing.JFrame {
         }
     }
 
-    private void fetchStableUser() {
+    private void fetchUsersFromDB() {
         var currentUserRole = currentUser.getRole();
         switch (currentUserRole) {
             case ADMIN -> {
-                if (items==null || items.isEmpty()){
-                    items=userService.findAllUserByRole(Role.MANAGER);
+                if (items == null || items.isEmpty()) {
+                    items = userService.findAllUserByRole(Role.MANAGER);
                 }
             }
             case MANAGER -> {
-                if (items==null || items.isEmpty()){
-                    items=userService.findAllUserByRole(Role.USER);
+                if (items == null || items.isEmpty()) {
+                    items = userService.findAllUserByRole(Role.USER);
                 }
             }
         }
@@ -151,7 +151,7 @@ public class UserManagementFrame extends javax.swing.JFrame {
 
     private void fetchNewUsersFromServer() {
         try {
-            items=userService.fetchAllUser(Role.USER);
+            items = userService.fetchAllUser(Role.USER);
             fetchData(items);
         } catch (RuntimeException e) {
             JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
@@ -182,17 +182,17 @@ public class UserManagementFrame extends javax.swing.JFrame {
         userTable.setBackground(new java.awt.Color(255, 255, 255));
         userTable.setForeground(new java.awt.Color(0, 0, 0));
         userTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][]{
 
-            },
-            elements
+                },
+                elements
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+            boolean[] canEdit = new boolean[]{
+                    false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jScrollPane2.setViewportView(userTable);
@@ -238,52 +238,52 @@ public class UserManagementFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(252, 252, 252)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(80, 80, 80)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAction, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(100, 100, 100)))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(252, 252, 252)
+                                .addComponent(jLabel1)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addContainerGap()
+                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(68, 68, 68)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(80, 80, 80)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(btnAction, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(100, 100, 100)))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jLabel1)
-                .addGap(30, 30, 30)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnAction, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
-                                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(32, 32, 32)
-                                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(jLabel1)
+                                .addGap(30, 30, 30)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(btnAction, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGap(34, 34, 34)
+                                                                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGap(32, 32, 32)
+                                                                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(7, 7, 7))
         );
 
         pack();
@@ -304,24 +304,25 @@ public class UserManagementFrame extends javax.swing.JFrame {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         List<UserEntity> items = new ArrayList<>();
-        String key = txtSearch.getText();
-        switch (this.userRole) {
-            case ADMIN -> searchUser(key,items,Role.MANAGER);
-            case MANAGER -> searchUser(key,items,Role.USER);
+        try {
+            String key = txtSearch.getText();
+            AppUtil.checkValidInput(key);
+            switch (this.userRole) {
+                case ADMIN -> searchUser(key, items, Role.MANAGER);
+                case MANAGER -> searchUser(key, items, Role.USER);
+            }
+        } catch (Exception e) {
+            JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    private void searchUser(String key ,List<UserEntity> items, Role role) {
+    private void searchUser(String key, List<UserEntity> items, Role role) {
         try {
-            var users = userService.findByIdOrUserName(key);
-            for(UserEntity user : users){
-                if (user.getRole() == role) {
-                    items.add(user);
-                }
-            }
+            var users = userService.findByIdOrUserName(key, role);
+            items.addAll(users);
             fetchData(items);
         } catch (RuntimeException e) {
-            JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
+            throw new RuntimeException(e.getMessage());
         }
     }
 

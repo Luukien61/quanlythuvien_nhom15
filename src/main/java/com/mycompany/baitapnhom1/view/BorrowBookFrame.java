@@ -4,6 +4,7 @@ import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
 import com.mycompany.baitapnhom1.entity.ReturnState;
 import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
+import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 
 import javax.swing.*;
@@ -301,39 +302,17 @@ public class BorrowBookFrame extends javax.swing.JFrame {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         var userId = txtUserId.getText();
         var bookId = txtBookId.getText();
-        if (!userId.isBlank() && !bookId.isBlank()) {
-            var items = borrowBookService.findAllByUserIdAndBookId(userId,bookId);
-            if(items.isEmpty() || checkAllReturn(items)){
-                int quantity = (Integer) snpQuantity.getSelectedItem();
-                int time = Integer.parseInt(((String) Objects.requireNonNull(snpTime.getSelectedItem())).substring(0, 1));
-                try {
-                    borrowBookService.saveNew(bookId, userId, quantity, time);
-                    fetchAllData();
-                    clearText();
-                    JOptionPaneUtil.showMessageDialog("Added successfully", 800, null);
-                } catch (RuntimeException e) {
-                    JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
-                }
-            }else {
-                JOptionPaneUtil.showErrorDialog("This user is currently borrowing the book",this);
-            }
-        } else {
-            JOptionPaneUtil.showErrorDialog("Please fill the require fields", this);
+        AppUtil.checkValidInput(userId,bookId);
+        int time = Integer.parseInt(((String) Objects.requireNonNull(snpTime.getSelectedItem())).substring(0, 1));
+        int quantity = (Integer) snpQuantity.getSelectedItem();
+        try{
+            borrowBookService.addNewBorrowItem(userId,bookId,time,quantity);
+            clearText();
+        }catch (Exception e){
+            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
         }
-
-
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private boolean checkAllReturn(List<BorrowFormEntity> items) {
-        for(BorrowFormEntity item : items){
-            var state = item.getState().getState();
-            if(state.equals(ReturnState.NOT_YET.getState())
-                    || state.equals(ReturnState.EXPIRED.getState())){
-                return false;
-            }
-        }
-        return true;
-    }
 
 
     private void clearText() {

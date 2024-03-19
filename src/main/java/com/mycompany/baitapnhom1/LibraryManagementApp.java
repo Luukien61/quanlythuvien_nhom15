@@ -10,7 +10,7 @@ import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
 import com.mycompany.baitapnhom1.util.AppUtil;
-import com.mycompany.baitapnhom1.view.DangNhap;
+import com.mycompany.baitapnhom1.view.LogInFrame;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
@@ -36,7 +36,7 @@ public class LibraryManagementApp {
         BookService bookService = context.getBean(BookService.class);
         BorrowBookService borrowBookService = context.getBean(BorrowBookService.class);
         //initData(context);
-        DangNhap view = new DangNhap(userService, bookService, borrowBookService);
+        LogInFrame view = new LogInFrame(userService, bookService, borrowBookService);
         view.setVisible(true);
     }
 

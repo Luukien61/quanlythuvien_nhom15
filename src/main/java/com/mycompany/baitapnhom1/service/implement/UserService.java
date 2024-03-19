@@ -3,13 +3,19 @@ package com.mycompany.baitapnhom1.service.implement;
 import com.mycompany.baitapnhom1.controller.GetUserController;
 import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
+import com.mycompany.baitapnhom1.model.ResultModel;
 import com.mycompany.baitapnhom1.repository.UserRepository;
 import com.mycompany.baitapnhom1.service.IUserService;
+import com.mycompany.baitapnhom1.util.AppUtil;
+import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
+import com.mycompany.baitapnhom1.view.MenuFrame;
+import com.mycompany.baitapnhom1.view.UserMenuFrame;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,11 +126,11 @@ public class UserService implements IUserService {
         }
     }
 
-    public List<UserEntity> findUserByUserNameContaining(String userName){
-        userName="%"+userName.trim()+"%";
+    public List<UserEntity> findUserByUserNameContaining(String userName) {
+        userName = "%" + userName.trim() + "%";
         try {
             return userRepository.findAllByUserNameContaining(userName);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -146,17 +152,52 @@ public class UserService implements IUserService {
         return findAllUserByRole(Role.USER);
     }
 
-    public List<UserEntity> findByIdOrUserName(String key) {
-        List<UserEntity> items = new ArrayList<>();
-        if (key == null) {
-            throw new RuntimeException("Please fill the require field");
-        }
+    public List<UserEntity> findByIdOrUserName(String key, Role role) {
         String regex = "^[CAD]T.*";
         Pattern idPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = idPattern.matcher(key);
         if (matcher.matches()) {
-             items.add(findUserByPersonalId(key));
-             return items;
-        } else return findUserByUserNameContaining(key);
+            return findUserByPersonalIdAndRole(key, role);
+        } else return findUserByUserNameContainingAndRole(key,role);
+    }
+
+    private List<UserEntity> findUserByPersonalIdAndRole(String id, Role role){
+        return userRepository.findAllByRoleAndPersonalIdContaining(role,id);
+    }
+
+    private List<UserEntity> findUserByUserNameContainingAndRole(String key, Role role){
+        return userRepository.findAllByRoleAndUserNameContaining(role,key);
+    }
+
+    @Transactional
+    public String saveOrUpdate(String userId, String userName, Role role, String password, UserEntity currentUser) throws SQLException {
+        var user = UserEntity.builder()
+                .personalId(userId)
+                .userName(userName)
+                .role(role)
+                .password(password)
+                .build();
+        if (currentUser == null) {
+            saveUser(user);
+            return "Added successfully";
+        } else {
+            updateUser(userId, userName, role, password, currentUser.getPersonalId());
+            return "Update successfully";
+        }
+    }
+
+    public ResultModel login(String id, String pass) {
+        return checkUser(id, pass);
+    }
+
+    private ResultModel checkUser(String id, String pass) {
+        try {
+            UserEntity user = findUserByUserIdAndPassword(id, pass);
+            if (user != null) {
+                return new ResultModel(user, "Đăng nhập thành công");
+            } else return new ResultModel(null, "Tên khoản hoặc mật khẩu không đúng. Vui lòng nhập lại");
+        } catch (SQLException e) {
+            return new ResultModel(null, e.getMessage());
+        }
     }
 }

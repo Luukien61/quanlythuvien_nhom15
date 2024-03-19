@@ -114,4 +114,12 @@ public class AppUtil {
             }
         });
     }
+
+    public static void checkValidInput(String... inputs) {
+        for(String input : inputs){
+            if(input.isBlank()){
+                throw new RuntimeException("Please fill required fields");
+            }
+        }
+    }
 }

@@ -9,6 +9,7 @@ import java.util.Enumeration;
 public class NetworkUtil {
     private static String getIPv4Address() {
         try {
+            String url="";
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
                 NetworkInterface iface = interfaces.nextElement();
@@ -17,16 +18,16 @@ public class NetworkUtil {
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
                     InetAddress addr = addresses.nextElement();
-                    if (addr instanceof Inet4Address && iface.getDisplayName().contains("Network")) {
-                        return addr.getHostAddress();
+                    if (addr instanceof Inet4Address) {
+                        url= addr.getHostAddress();
                     }
                 }
             }
+            return url;
         } catch (
                 SocketException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
     public static String getUserURI(){
         return "http://" + getIPv4Address() + ":8088/user/ct06";
