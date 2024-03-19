@@ -206,25 +206,29 @@ public class AddBookFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAuthorActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        String bookId = txtBookId.getText();
-        String bookName = txtBookName.getText();
-        String author = txtAuthor.getText();
-        BookCategory bookCategory = (BookCategory) txtCategory.getSelectedItem();
-        String publisher = txtPublisher.getText();
-        int year = Integer.parseInt(txtPublishDate.getText());
-        Date date= AppUtil.getPublishDate(year);
-        int quantity = Integer.parseInt(txtQuantity.getText());
-        BookEntity book = BookEntity.builder()
-                .bookId(bookId)
-                .bookName(bookName)
-                .author(author)
-                .publisher(publisher)
-                .totalQuantity(quantity)
-                .restQuantity(quantity)
-                .category(bookCategory)
-                .publishDate(date)
-                .build();
+
         try {
+            String bookId = txtBookId.getText();
+            String bookName = txtBookName.getText();
+            String author = txtAuthor.getText();
+            BookCategory bookCategory = (BookCategory) txtCategory.getSelectedItem();
+            String publisher = txtPublisher.getText();
+            var stringYear = txtPublishDate.getText();
+            var rawQuantity= txtQuantity.getText();
+            checkValidInput(bookId,bookName,author,publisher,stringYear,rawQuantity);
+            int year = Integer.parseInt(stringYear);
+            Date date= AppUtil.getPublishDate(year);
+            int quantity = Integer.parseInt(txtQuantity.getText());
+            BookEntity book = BookEntity.builder()
+                    .bookId(bookId)
+                    .bookName(bookName)
+                    .author(author)
+                    .publisher(publisher)
+                    .totalQuantity(quantity)
+                    .restQuantity(quantity)
+                    .category(bookCategory)
+                    .publishDate(date)
+                    .build();
             var result = bookService.saveNewBook(book);
             clearText();
             JOptionPaneUtil.showMessageDialog(result.getMessage(), 500, this);
@@ -233,6 +237,14 @@ public class AddBookFrame extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void checkValidInput(String... inputs) {
+        for(String input : inputs){
+            if(input.isBlank()){
+                throw new RuntimeException("Please fill required fields");
+            }
+        }
+    }
 
     private void clearText() {
         txtBookId.setText("");
