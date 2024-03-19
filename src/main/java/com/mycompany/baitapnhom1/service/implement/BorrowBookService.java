@@ -112,29 +112,26 @@ public class BorrowBookService implements IBorrowBookService {
         return borrowBookRepository.findAllByBook(bookId.trim());
     }
 
-    public void addNewBorrowItem(String userId, String bookId, int time, int quantity){
-        if (!userId.isBlank() && !bookId.isBlank()) {
-            var items = findAllByUserIdAndBookId(userId,bookId);
-            if(items.isEmpty() || checkAllReturn(items)){
-                try {
-                    saveNew(bookId, userId, quantity, time);
-                    JOptionPaneUtil.showMessageDialog("Added successfully", 800, null);
-                } catch (RuntimeException e) {
-                    throw new RuntimeException(e.getMessage());
-                }
-            }else {
-                throw new RuntimeException("This user is currently borrowing the book");
+    public void addNewBorrowItem(String userId, String bookId, int time, int quantity) {
+
+        var items = findAllByUserIdAndBookId(userId, bookId);
+        if ( checkAllReturn(items)) {
+            try {
+                saveNew(bookId, userId, quantity, time);
+            } catch (RuntimeException e) {
+                throw new RuntimeException(e.getMessage());
             }
         } else {
-            throw new RuntimeException("Please fill the require fields");
+            throw new RuntimeException("This user is currently borrowing the book");
         }
     }
 
     private boolean checkAllReturn(List<BorrowFormEntity> items) {
-        for(BorrowFormEntity item : items){
+        if(items.isEmpty()) return true;
+        for (BorrowFormEntity item : items) {
             var state = item.getState().getState();
-            if(state.equals(ReturnState.NOT_YET.getState())
-                    || state.equals(ReturnState.EXPIRED.getState())){
+            if (state.equals(ReturnState.NOT_YET.getState())
+                    || state.equals(ReturnState.EXPIRED.getState())) {
                 return false;
             }
         }
@@ -156,7 +153,7 @@ public class BorrowBookService implements IBorrowBookService {
     }
 
     @Override
-    public void displayData(DefaultTableModel model, List<BorrowFormEntity> items, Function<BookEntity,String> function) {
+    public void displayData(DefaultTableModel model, List<BorrowFormEntity> items, Function<BookEntity, String> function) {
         int index = 1;
         LocalDate borrowDate;
         LocalDate returnDate;
@@ -185,7 +182,7 @@ public class BorrowBookService implements IBorrowBookService {
         borrowBookRepository.expireBorrowForm(EXPIRED, new Date(), NOT_YET);
     }
 
-    public List<BorrowFormEntity> findAllExpiredBorrowedForm(){
+    public List<BorrowFormEntity> findAllExpiredBorrowedForm() {
         return borrowBookRepository.findAllByState(EXPIRED);
     }
 
