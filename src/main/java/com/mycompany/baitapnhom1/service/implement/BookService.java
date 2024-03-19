@@ -14,13 +14,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -89,7 +89,7 @@ public class BookService implements IBookService {
     @Override
     public List<BookEntity> findBooksByCategory(String category) {
         try {
-            category = "%"+category.trim().toUpperCase()+"%";
+            category = "%" + category.trim().toUpperCase() + "%";
             //var bookCategory = BookCategory.valueOf(category);
             return bookRepository.findAllByCategoryContaining(category);
         } catch (Exception e) {
@@ -220,7 +220,7 @@ public class BookService implements IBookService {
         }
     }
 
-    public void displayBooks(DefaultTableModel model,@Nullable CustomCallBackFunction function, List<BookEntity> items) {
+    public void displayBooks(DefaultTableModel model, @Nullable CustomCallBackFunction function, List<BookEntity> items) {
         model.setRowCount(0);
         int index = 1;
         for (BookEntity book : items) {
@@ -234,6 +234,42 @@ public class BookService implements IBookService {
             model.addRow(data);
             index += 1;
         }
-        if(function!=null) function.call();
+        if (function != null) function.call();
+    }
+
+    public ResultModel saveNewBook(String bookId, String bookName, String author, String publisher, int quantity, BookCategory bookCategory, Date date) {
+        BookEntity book = BookEntity.builder()
+                .bookId(bookId)
+                .bookName(bookName)
+                .author(author)
+                .publisher(publisher)
+                .totalQuantity(quantity)
+                .restQuantity(quantity)
+                .category(bookCategory)
+                .publishDate(date)
+                .build();
+        return saveNewBook(book);
+    }
+
+    public List<BookEntity> findBooks(String key, BookFields field) {
+        List<BookEntity> items = new ArrayList<>();
+        if (field == BookFields.PUBLISH_DATE) {
+            try {
+                var year = Integer.parseInt(key);
+                items.addAll(findBookByYear(year));
+            } catch (Exception e) {
+                throw new RuntimeException("Please type the year correctly");
+            }
+        } else {
+            try {
+                var books = searchBookByField(field, key);
+                if (books.getFirst() != null) {
+                    items.addAll(books);
+                } else throw new RuntimeException("Không tìm thấy sách");
+            } catch (RuntimeException e) {
+               throw new RuntimeException("An error occurs when finding books");
+            }
+        }
+        return items;
     }
 }

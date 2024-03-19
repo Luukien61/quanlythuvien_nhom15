@@ -8,6 +8,7 @@ import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.model.BookFields;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
+import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ import java.util.List;
 public class BookManagementFrame extends javax.swing.JFrame {
 
     private final BookService bookService;
-//    private final UserService userService;
+    //    private final UserService userService;
     private List<BookEntity> items;
     private DefaultTableModel model;
 
@@ -54,7 +55,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
     }
 
     private void initRowFunction() {
-        model=(DefaultTableModel) tableSach.getModel();
+        model = (DefaultTableModel) tableSach.getModel();
         JPopupMenu popupMenu = new JPopupMenu();
         JMenuItem deleteItem = new JMenuItem("Xoá");
         JMenuItem updateItem = new JMenuItem("Sửa");
@@ -137,19 +138,19 @@ public class BookManagementFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tableSach.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][]{
 
-            },
-            new String [] {
-                "Stt", "Mã sách", "Tên sách", "Số lượng", "Số lượng kho", "Tên tác giả", "Thể Loại", "Nhà xuất bản", "Năm xuất bản"
-            }
+                },
+                new String[]{
+                        "Stt", "Mã sách", "Tên sách", "Số lượng", "Số lượng kho", "Tên tác giả", "Thể Loại", "Nhà xuất bản", "Năm xuất bản"
+                }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+            boolean[] canEdit = new boolean[]{
+                    false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tableSach.getTableHeader().setReorderingAllowed(false);
@@ -216,52 +217,52 @@ public class BookManagementFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(371, 371, 371)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(105, 105, 105)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(139, 139, 139)
-                        .addComponent(btnFetchAll, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(snpSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(48, 48, 48)
-                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(93, 93, 93)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnExist, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(111, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addContainerGap()
+                                                .addComponent(jScrollPane2))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(371, 371, 371)
+                                                .addComponent(jLabel1)
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addContainerGap())
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(105, 105, 105)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(139, 139, 139)
+                                                .addComponent(btnFetchAll, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(snpSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(48, 48, 48)
+                                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(93, 93, 93)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnExist, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(111, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(snpSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnExist, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFetchAll, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(58, 58, 58))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(60, 60, 60)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(snpSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnExist, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnFetchAll, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(58, 58, 58))
         );
 
         pack();
@@ -304,7 +305,7 @@ public class BookManagementFrame extends javax.swing.JFrame {
 
     private void initData(List<BookEntity> items) {
         try {
-           bookService.displayBooks(model,this::clearText,items);
+            bookService.displayBooks(model, this::clearText, items);
         } catch (RuntimeException e) {
             JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
         }
@@ -319,8 +320,8 @@ public class BookManagementFrame extends javax.swing.JFrame {
         initData(items);
     }
 
-    private void initNewData(){
-        items=bookService.findAllBook();
+    private void initNewData() {
+        items = bookService.findAllBook();
         initData(items);
     }
 
@@ -345,37 +346,17 @@ public class BookManagementFrame extends javax.swing.JFrame {
     }
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {
-        var key = txtSearch.getText();
-        var field = (BookFields) snpSearch.getSelectedItem();
-        if (!key.isBlank() && field != null) {
-            List<BookEntity> items = new ArrayList<>();
-            if (field == BookFields.PUBLISH_DATE) {
-                try {
-                    var year = Integer.parseInt(key);
-                    items.addAll(bookService.findBookByYear(year));
-                } catch (Exception e) {
-                    JOptionPaneUtil.showErrorDialog("Please type the year correctly", this);
-                }
-            } else {
-                try {
-                    var books = bookService.searchBookByField(field, key);
-                    if (books.getFirst() != null) {
-                        items.addAll(books);
-                    } else throw new RuntimeException("Không tìm thấy sách");
-                } catch (RuntimeException e) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Không tìm thấy sách",
-                            "Thông báo",
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
-                }
-            }
-            initData(items);
-        } else {
-            JOptionPaneUtil.showErrorDialog("Please fill the require fields", this);
+       try{
+           var key = txtSearch.getText();
+           var field = (BookFields) snpSearch.getSelectedItem();
+           // checkValidInput(inputs)
+           AppUtil.checkValidInput(key);
+           var items = bookService.findBooks(key, field);
+           initData(items);
+       }catch (RuntimeException e){
+           JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
+       }
 
-        }
     }
 
     private void snpSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_snpSearchActionPerformed

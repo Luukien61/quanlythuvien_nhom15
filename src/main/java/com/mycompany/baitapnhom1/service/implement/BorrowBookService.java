@@ -2,8 +2,10 @@ package com.mycompany.baitapnhom1.service.implement;
 
 import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
+import com.mycompany.baitapnhom1.entity.ReturnState;
 import com.mycompany.baitapnhom1.repository.BorrowBookRepository;
 import com.mycompany.baitapnhom1.service.IBorrowBookService;
+import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
@@ -108,6 +110,35 @@ public class BorrowBookService implements IBorrowBookService {
             return borrowBookRepository.findAllByUser(userId.trim().toUpperCase());
         }
         return borrowBookRepository.findAllByBook(bookId.trim());
+    }
+
+    public void addNewBorrowItem(String userId, String bookId, int time, int quantity){
+        if (!userId.isBlank() && !bookId.isBlank()) {
+            var items = findAllByUserIdAndBookId(userId,bookId);
+            if(items.isEmpty() || checkAllReturn(items)){
+                try {
+                    saveNew(bookId, userId, quantity, time);
+                    JOptionPaneUtil.showMessageDialog("Added successfully", 800, null);
+                } catch (RuntimeException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }else {
+                throw new RuntimeException("This user is currently borrowing the book");
+            }
+        } else {
+            throw new RuntimeException("Please fill the require fields");
+        }
+    }
+
+    private boolean checkAllReturn(List<BorrowFormEntity> items) {
+        for(BorrowFormEntity item : items){
+            var state = item.getState().getState();
+            if(state.equals(ReturnState.NOT_YET.getState())
+                    || state.equals(ReturnState.EXPIRED.getState())){
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

@@ -5,17 +5,11 @@
 package com.mycompany.baitapnhom1.view;
 
 import com.mycompany.baitapnhom1.entity.BookCategory;
-import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -213,23 +207,15 @@ public class AddBookFrame extends javax.swing.JFrame {
             String author = txtAuthor.getText();
             BookCategory bookCategory = (BookCategory) txtCategory.getSelectedItem();
             String publisher = txtPublisher.getText();
-            var stringYear = txtPublishDate.getText();
+            var rawYear = txtPublishDate.getText();
             var rawQuantity= txtQuantity.getText();
-            checkValidInput(bookId,bookName,author,publisher,stringYear,rawQuantity);
-            int year = Integer.parseInt(stringYear);
+
+            //checkInputValid(inputs) if invalid throw an error
+            AppUtil.checkValidInput(bookId,bookName,author,publisher,rawYear,rawQuantity);
+            int year = Integer.parseInt(rawYear);
             Date date= AppUtil.getPublishDate(year);
             int quantity = Integer.parseInt(txtQuantity.getText());
-            BookEntity book = BookEntity.builder()
-                    .bookId(bookId)
-                    .bookName(bookName)
-                    .author(author)
-                    .publisher(publisher)
-                    .totalQuantity(quantity)
-                    .restQuantity(quantity)
-                    .category(bookCategory)
-                    .publishDate(date)
-                    .build();
-            var result = bookService.saveNewBook(book);
+            var result= bookService.saveNewBook(bookId,bookName,author,publisher,quantity,bookCategory,date);
             clearText();
             JOptionPaneUtil.showMessageDialog(result.getMessage(), 500, this);
         } catch (RuntimeException e) {
@@ -237,14 +223,6 @@ public class AddBookFrame extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnAddActionPerformed
-
-    private void checkValidInput(String... inputs) {
-        for(String input : inputs){
-            if(input.isBlank()){
-                throw new RuntimeException("Please fill required fields");
-            }
-        }
-    }
 
     private void clearText() {
         txtBookId.setText("");

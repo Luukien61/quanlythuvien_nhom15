@@ -224,31 +224,38 @@ public class UpdateBookFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAuthorActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        String bookId = txtBookId.getText();
-        String bookName = txtBookName.getText();
-        String author = txtAuthor.getText();
-        BookCategory bookCategory = (BookCategory) txtCategory.getSelectedItem();
-        String publisher = txtPublisher.getText();
-        int publishDate = Integer.parseInt(txtPublishDate.getText());
-        LocalDate localDate = LocalDate.of(publishDate, 1, 1);
-        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        int quantity = Integer.parseInt(txtQuantity.getText());
-        int availableQuantity = Integer.parseInt(txtRestQuantity.getText());
-        var prevBookId=book.getBookId();
-        book.setBookId(bookId);
-        book.setBookName(bookName);
-        book.setCategory(bookCategory);
-        book.setAuthor(author);
-        book.setPublisher(publisher);
-        book.setPublishDate(date);
-        book.setTotalQuantity(quantity);
-        book.setRestQuantity(availableQuantity);
+
         try {
-            var result = bookService.updateBook(book,prevBookId);
+            String bookId = txtBookId.getText();
+            String bookName = txtBookName.getText();
+            String author = txtAuthor.getText();
+            String rawDate = txtPublishDate.getText();
+            String rawQuantity = txtQuantity.getText();
+            String publisher = txtPublisher.getText();
+            String rawRestQuantity = txtRestQuantity.getText();
+            //checkValidInput(inputs)
+            AppUtil.checkValidInput(bookId,bookName,author,rawDate,rawQuantity,publisher,rawRestQuantity);
+
+            BookCategory bookCategory = (BookCategory) txtCategory.getSelectedItem();
+            int publishDate = Integer.parseInt(rawDate);
+            LocalDate localDate = LocalDate.of(publishDate, 1, 1);
+            Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            int quantity = Integer.parseInt(rawQuantity);
+            int availableQuantity = Integer.parseInt(rawRestQuantity);
+            var prevBookId = book.getBookId();
+            book.setBookId(bookId);
+            book.setBookName(bookName);
+            book.setCategory(bookCategory);
+            book.setAuthor(author);
+            book.setPublisher(publisher);
+            book.setPublishDate(date);
+            book.setTotalQuantity(quantity);
+            book.setRestQuantity(availableQuantity);
+            var result = bookService.updateBook(book, prevBookId);
             JOptionPaneUtil.showMessageDialog(result.getMessage(), 800, null);
             dispose();
         } catch (RuntimeException e) {
-            JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
+            JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 

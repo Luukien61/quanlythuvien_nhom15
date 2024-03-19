@@ -12,7 +12,6 @@ import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 import org.springframework.lang.Nullable;
 
 import javax.swing.*;
-import java.sql.SQLException;
 
 /**
  * @author kienl
@@ -167,25 +166,15 @@ public class AddLibrarianFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        var userId = txtId.getText().trim().toUpperCase();
-        var userName = txtName.getText().trim();
-        var password = txtPassword.getText().trim();
-        var user = UserEntity.builder()
-                .personalId(userId)
-                .userName(userName)
-                .role(Role.MANAGER)
-                .password(password)
-                .build();
         try {
-            if (currentUser == null) {
-                userService.saveUser(user);
-                clearText();
-                JOptionPaneUtil.showMessageDialog("Added successfully", 800,this);
-            } else {
-                userService.updateUser(userId,userName,Role.MANAGER,password, currentUser.getPersonalId());
-                JOptionPaneUtil.showMessageDialog("Update successfully", 800, null);
-                dispose();
-            }
+            var userId = txtId.getText().trim().toUpperCase();
+            var userName = txtName.getText().trim();
+            var password = txtPassword.getText().trim();
+            AppUtil.checkValidInput(userId, userName, password);
+            var message=userService.saveOrUpdate(userId,userName,Role.MANAGER,password, currentUser);
+            JOptionPaneUtil.showMessageDialog(message,800,this);
+            clearText();
+            if(currentUser!=null) dispose();
         } catch (Exception e) {
             JOptionPaneUtil.showErrorDialog(e.getMessage(), this);
         }

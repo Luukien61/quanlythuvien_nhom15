@@ -4,19 +4,16 @@
  */
 package com.mycompany.baitapnhom1.view;
 
-import javax.swing.*;
-
 import com.mycompany.baitapnhom1.LibraryManagementApp;
 import com.mycompany.baitapnhom1.entity.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
-import com.mycompany.baitapnhom1.model.ResultModel;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
 import com.mycompany.baitapnhom1.service.implement.UserService;
 import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 
-import java.sql.SQLException;
+import javax.swing.*;
 import java.util.Objects;
 
 /**
@@ -171,41 +168,32 @@ public class LogInFrame extends javax.swing.JFrame {
     }
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {
-        String id = txtTK.getText().trim();
-        String pass = new String(txtMK.getPassword());
-        // TODO add your handling code here:
-        if(!id.isEmpty()&& !pass.isEmpty()){
-            var data = checkUser(id,pass);
-            if(data.getData()!=null){
-                var user =(UserEntity) data.getData();
-                AppUtil.setCurrentUser(user);
-                JFrame frame;
-                if(user.getRole()== Role.USER){
-                    frame = new UserMenuFrame(bookService,borrowBookService);
-                }else {
-                    frame = new MenuFrame(userService,bookService,borrowBookService);
-                }
-                AppUtil.setUpWindowListener(frame,this,this::resetForm);
-            }
-            else{
-                resetForm();
-            }
-            JOptionPaneUtil.showMessageDialog(data.getMessage(),800,null);
-        }else {
-            JOptionPane.showMessageDialog(this, "Vui long nhap userName va password");
-        }
+       try{
+           String id = txtTK.getText().trim();
+           String pass = new String(txtMK.getPassword());
+           AppUtil.checkValidInput(id,pass);
+           var data = userService.login(id,pass);
+           if(data.getData()!=null){
+               var user =(UserEntity) data.getData();
+               AppUtil.setCurrentUser(user);
+               JFrame frame;
+               if(user.getRole()== Role.USER){
+                   frame = new UserMenuFrame(bookService,borrowBookService);
+               }else {
+                   frame = new MenuFrame(userService,bookService,borrowBookService);
+               }
+               AppUtil.setUpWindowListener(frame,this,this::resetForm);
+           }
+           else{
+               resetForm();
+           }
+           JOptionPaneUtil.showMessageDialog(data.getMessage(),800,null);
+       }catch (Exception e){
+           JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
+       }
     }
 
-    private ResultModel checkUser(String id, String pass) {
-        try{
-            UserEntity user = userService.findUserByUserIdAndPassword(id,pass);
-            if(user!=null){
-                return new ResultModel(user,"Đăng nhập thành công");
-            }else return new ResultModel(null,"Tên khoản hoặc mật khẩu không đúng. Vui lòng nhập lại");
-        }catch (SQLException e) {
-            return new ResultModel(null,e.getMessage());
-        }
-    }
+
 
 
 
