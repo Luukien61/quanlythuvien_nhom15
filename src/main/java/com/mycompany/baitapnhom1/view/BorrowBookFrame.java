@@ -307,6 +307,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
         int quantity = (Integer) snpQuantity.getSelectedItem();
         try{
             borrowBookService.addNewBorrowItem(userId,bookId,time,quantity);
+            JOptionPaneUtil.showMessageDialog("Added successfully", 800, null);
             clearText();
         }catch (Exception e){
             JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
