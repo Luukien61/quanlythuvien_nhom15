@@ -1,9 +1,7 @@
 package com.mycompany.baitapnhom1.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.*;
 import java.util.ArrayList;

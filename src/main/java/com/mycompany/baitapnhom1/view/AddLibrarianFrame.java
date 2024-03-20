@@ -29,7 +29,6 @@ public class AddLibrarianFrame extends javax.swing.JFrame {
         this.userService = userService;
         this.currentUser = user;
         initUser();
-
     }
 
     private void initUser() {
@@ -45,7 +44,9 @@ public class AddLibrarianFrame extends javax.swing.JFrame {
         initComponents();
         txtId.setText(currentUser.getPersonalId());
         txtName.setText(currentUser.getUserName());
-        txtPassword.setText(currentUser.getPassword());
+        //txtPassword.setText(currentUser.getPassword());
+        txtPassword.setVisible(false);
+        jLabel4.setVisible(false);
     }
 
     /**
