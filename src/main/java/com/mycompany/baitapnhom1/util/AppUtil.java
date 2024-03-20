@@ -120,6 +120,7 @@ public class AppUtil {
             if(input.isBlank()){
                 throw new RuntimeException("Please fill required fields");
             }
+
         }
     }
 }

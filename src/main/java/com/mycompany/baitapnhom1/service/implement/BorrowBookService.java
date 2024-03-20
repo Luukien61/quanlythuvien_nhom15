@@ -98,7 +98,11 @@ public class BorrowBookService implements IBorrowBookService {
     @Override
     @Transactional
     public void deleteItem(String id) {
-        borrowBookRepository.deleteByBorrowId(id);
+        try{
+            borrowBookRepository.deleteByBorrowId(id);
+        }catch (Exception e){
+            throw new RuntimeException("An error occurs when deleting this item");
+        }
     }
 
     @Override
