@@ -15,6 +15,9 @@ public class TestGit {
 
     private String getRandomString() {
         return "this is from a random person";
+    }
 
+    private void doSomeThing(){
+        System.out.println("hello");
     }
 }
