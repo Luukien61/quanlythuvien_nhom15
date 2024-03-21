@@ -4,7 +4,7 @@
  */
 package com.mycompany.baitapnhom1.view;
 
-import com.mycompany.baitapnhom1.entity.BookCategory;
+import com.mycompany.baitapnhom1.model.BookCategory;
 import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.util.AppUtil;

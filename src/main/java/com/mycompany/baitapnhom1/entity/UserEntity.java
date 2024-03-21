@@ -1,6 +1,7 @@
 package com.mycompany.baitapnhom1.entity;
 
 
+import com.mycompany.baitapnhom1.model.Role;
 import lombok.*;
 
 import javax.persistence.*;

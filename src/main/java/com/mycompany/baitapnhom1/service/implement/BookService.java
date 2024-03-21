@@ -1,6 +1,6 @@
 package com.mycompany.baitapnhom1.service.implement;
 
-import com.mycompany.baitapnhom1.entity.BookCategory;
+import com.mycompany.baitapnhom1.model.BookCategory;
 import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.model.BookFields;
 import com.mycompany.baitapnhom1.model.BookStatistic;
@@ -9,12 +9,11 @@ import com.mycompany.baitapnhom1.repository.BookRepository;
 import com.mycompany.baitapnhom1.service.IBookService;
 import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.util.CustomCallBackFunction;
-import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -160,6 +159,17 @@ public class BookService implements IBookService {
         }
     }
 
+    public void deleteBookByBookId(String bookId) {
+        try {
+            var book = bookRepository.findByBookId(bookId.trim());
+            book.ifPresent(bookEntity -> bookRepository.delete(bookEntity));
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("This book is currently borrowed."+'\n'+"Please return first");
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred when trying to delete this book");
+        }
+    }
+
     @Override
     public BookEntity findBookByBookId(String bookId) {
         return bookRepository.findByBookId(bookId.trim())
@@ -267,7 +277,7 @@ public class BookService implements IBookService {
                     items.addAll(books);
                 } else throw new RuntimeException("Không tìm thấy sách");
             } catch (RuntimeException e) {
-               throw new RuntimeException(e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         }
         return items;

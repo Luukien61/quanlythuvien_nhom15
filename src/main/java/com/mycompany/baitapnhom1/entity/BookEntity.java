@@ -1,11 +1,11 @@
 package com.mycompany.baitapnhom1.entity;
 
+import com.mycompany.baitapnhom1.model.BookCategory;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Entity
 @Getter

@@ -1,6 +1,6 @@
 package com.mycompany.baitapnhom1.service;
 
-import com.mycompany.baitapnhom1.entity.Role;
+import com.mycompany.baitapnhom1.model.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 
 import java.sql.SQLException;

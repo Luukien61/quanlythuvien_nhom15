@@ -279,9 +279,8 @@ public class BookManagementFrame extends javax.swing.JFrame {
         if (choose == JOptionPane.YES_OPTION) {
             var model = tableSach.getModel();
             var bookId = model.getValueAt(selectedRow, 1).toString();
-            var bookName = model.getValueAt(selectedRow, 2).toString();
             try {
-                bookService.deleteBookByBookIdAndName(bookId, bookName);
+                bookService.deleteBookByBookId(bookId);
                 initNewData();
                 JOptionPaneUtil.showMessageDialog("Deleted Successfully", 1500, jScrollPane2);
             } catch (RuntimeException e) {

@@ -4,7 +4,7 @@
 
 package com.mycompany.baitapnhom1;
 
-import com.mycompany.baitapnhom1.entity.Role;
+import com.mycompany.baitapnhom1.model.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.BorrowBookService;

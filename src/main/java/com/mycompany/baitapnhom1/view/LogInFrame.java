@@ -5,7 +5,7 @@
 package com.mycompany.baitapnhom1.view;
 
 import com.mycompany.baitapnhom1.LibraryManagementApp;
-import com.mycompany.baitapnhom1.entity.Role;
+import com.mycompany.baitapnhom1.model.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.service.implement.BookService;
 import com.mycompany.baitapnhom1.service.implement.BorrowBookService;

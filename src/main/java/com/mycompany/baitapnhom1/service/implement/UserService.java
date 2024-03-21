@@ -1,25 +1,18 @@
 package com.mycompany.baitapnhom1.service.implement;
 
 import com.mycompany.baitapnhom1.controller.GetUserController;
-import com.mycompany.baitapnhom1.entity.Role;
+import com.mycompany.baitapnhom1.model.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.model.ResultModel;
 import com.mycompany.baitapnhom1.repository.UserRepository;
 import com.mycompany.baitapnhom1.service.IUserService;
-import com.mycompany.baitapnhom1.util.AppUtil;
-import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
-import com.mycompany.baitapnhom1.view.MenuFrame;
-import com.mycompany.baitapnhom1.view.UserMenuFrame;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

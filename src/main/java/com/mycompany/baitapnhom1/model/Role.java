@@ -1,4 +1,4 @@
-package com.mycompany.baitapnhom1.entity;
+package com.mycompany.baitapnhom1.model;
 
 public enum Role {
     ADMIN,

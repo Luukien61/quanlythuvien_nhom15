@@ -1,6 +1,6 @@
 package com.mycompany.baitapnhom1.repository;
 
-import com.mycompany.baitapnhom1.entity.BookCategory;
+import com.mycompany.baitapnhom1.model.BookCategory;
 import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.model.BookStatistic;
 import org.springframework.data.jpa.repository.JpaRepository;
