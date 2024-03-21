@@ -2,12 +2,10 @@ package com.mycompany.baitapnhom1.service.implement;
 
 import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
-import com.mycompany.baitapnhom1.entity.ReturnState;
+import com.mycompany.baitapnhom1.model.ReturnState;
 import com.mycompany.baitapnhom1.repository.BorrowBookRepository;
 import com.mycompany.baitapnhom1.service.IBorrowBookService;
-import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.mycompany.baitapnhom1.entity.ReturnState.*;
+import static com.mycompany.baitapnhom1.model.ReturnState.*;
 
 @Service
 @AllArgsConstructor
@@ -98,10 +96,10 @@ public class BorrowBookService implements IBorrowBookService {
     @Override
     @Transactional
     public void deleteItem(String id) {
-        try{
+        try {
             borrowBookRepository.deleteByBorrowId(id);
-        }catch (Exception e){
-            throw new RuntimeException("An error occurs when deleting this item");
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred when deleting this item");
         }
     }
 
@@ -119,7 +117,7 @@ public class BorrowBookService implements IBorrowBookService {
     public void addNewBorrowItem(String userId, String bookId, int time, int quantity) {
 
         var items = findAllByUserIdAndBookId(userId, bookId);
-        if ( checkAllReturn(items)) {
+        if (checkAllReturn(items)) {
             try {
                 saveNew(bookId, userId, quantity, time);
             } catch (RuntimeException e) {
@@ -131,7 +129,7 @@ public class BorrowBookService implements IBorrowBookService {
     }
 
     private boolean checkAllReturn(List<BorrowFormEntity> items) {
-        if(items.isEmpty()) return true;
+        if (items.isEmpty()) return true;
         for (BorrowFormEntity item : items) {
             var state = item.getState().getState();
             if (state.equals(ReturnState.NOT_YET.getState())
@@ -188,6 +186,21 @@ public class BorrowBookService implements IBorrowBookService {
 
     public List<BorrowFormEntity> findAllExpiredBorrowedForm() {
         return borrowBookRepository.findAllByState(EXPIRED);
+    }
+
+    public void updateBorrowForm(BorrowFormEntity item,String userId, String bookId, int time, ReturnState state, int quantity) {
+        try {
+            var user = userService.findUserByPersonalId(userId);
+            var book = bookService.findBookByBookId(bookId);
+            if (book.getRestQuantity() < quantity) {
+                throw new RuntimeException("The remaining quantity of this book is insufficient");
+            }
+            var items = borrowBookRepository.
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
     }
 
 }

@@ -2,20 +2,15 @@ package com.mycompany.baitapnhom1.view;
 
 import com.mycompany.baitapnhom1.entity.BookEntity;
 import com.mycompany.baitapnhom1.entity.BorrowFormEntity;
-import com.mycompany.baitapnhom1.entity.ReturnState;
+import com.mycompany.baitapnhom1.model.ReturnState;
 import com.mycompany.baitapnhom1.service.implement.BorrowBookService;
 import com.mycompany.baitapnhom1.util.AppUtil;
 import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -67,12 +62,25 @@ public class BorrowBookFrame extends javax.swing.JFrame {
                     tableContent.setRowSelectionInterval(row, row);
                     if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
                         menu.show(e.getComponent(), e.getX(), e.getY());
+                    } else if (e.getClickCount() == 2) {
+                        String borrowId = (String) model.getValueAt(row, 1);
+                        try {
+                            var item = borrowBookService.findByBorrowId(borrowId);
+                                displayBorrowItem(item);
+                        } catch (RuntimeException ex) {
+                            JOptionPaneUtil.showErrorDialog(ex.getMessage(), null);
+                        }
                     }
                 } else {
                     tableContent.clearSelection();
                 }
             }
         });
+    }
+
+    private void displayBorrowItem(BorrowFormEntity item) {
+        UpdateBorrowFormFrame frame = new UpdateBorrowFormFrame(item,borrowBookService);
+        AppUtil.setUpWindowListener(frame,this,this::fetchAllData);
     }
 
     private void returnBook(int selectedRow) {
@@ -92,7 +100,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.INFORMATION_MESSAGE
             );
-            if(choose==JOptionPane.YES_OPTION){
+            if (choose == JOptionPane.YES_OPTION) {
                 var borrowId = (String) model.getValueAt(selectedRow, 1);
                 borrowBookService.returnBook(borrowId);
                 fetchAllData();
@@ -324,6 +332,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
         int quantity = (Integer) snpQuantity.getSelectedItem();
         try {
             borrowBookService.addNewBorrowItem(userId, bookId, time, quantity);
+            fetchAllData();
             JOptionPaneUtil.showMessageDialog("Added successfully", 800, null);
             clearText();
         } catch (Exception e) {

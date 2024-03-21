@@ -22,14 +22,14 @@ public class GetUserController {
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json;charset=UTF-8");
             if(connection.getResponseCode()!=200){
-                throw new IOException("An error occur when fetching users");
+                throw new IOException("An error occurred when fetching users");
             }
             ObjectMapper objectMapper = new ObjectMapper();
             List<UserEntity> items = objectMapper.readValue(url,objectMapper.getTypeFactory().constructCollectionType(List.class, UserEntity.class));
             connection.disconnect();
             return items;
         } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException("An error occur when connecting to the server");
+            throw new RuntimeException("An error occurred when connecting to the server");
         }
     }
 }

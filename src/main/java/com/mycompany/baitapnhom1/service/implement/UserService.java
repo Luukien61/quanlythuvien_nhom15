@@ -112,7 +112,7 @@ public class UserService implements IUserService {
         try {
             return userRepository.findAll();
         } catch (Exception e) {
-            throw new RuntimeException("Sorry, an error occurs when finding the user");
+            throw new RuntimeException("Sorry, an error occurred when finding the user");
         }
     }
 
@@ -121,7 +121,7 @@ public class UserService implements IUserService {
         try {
             return userRepository.findByPersonalIdAndPassword(id.toUpperCase(), password).orElse(null);
         } catch (Exception e) {
-            throw new SQLException("Sorry, an error occurs when finding the user");
+            throw new SQLException("Sorry, an error occurred when finding the user");
         }
     }
 
@@ -131,7 +131,7 @@ public class UserService implements IUserService {
         try {
             return userRepository.findAllByRole(role);
         } catch (Exception e) {
-            throw new RuntimeException("Sorry, an error occurs when fetching users");
+            throw new RuntimeException("Sorry, an error occurred when fetching users");
         }
     }
 

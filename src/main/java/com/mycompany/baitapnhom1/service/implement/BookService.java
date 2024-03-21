@@ -32,7 +32,7 @@ public class BookService implements IBookService {
         try {
             return bookRepository.findAll();
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to fetch books");
+            throw new RuntimeException("An error occurred when trying to fetch books");
         }
     }
 
@@ -41,7 +41,7 @@ public class BookService implements IBookService {
         try {
             return bookRepository.findByBookName(name);
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to fetch books");
+            throw new RuntimeException("An error occurred when trying to fetch books");
         }
     }
 
@@ -49,7 +49,7 @@ public class BookService implements IBookService {
         try {
             return bookRepository.findAllByBookNameContaining(name);
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to fetch books");
+            throw new RuntimeException("An error occurred when trying to fetch books");
 
         }
     }
@@ -59,7 +59,7 @@ public class BookService implements IBookService {
         try {
             return bookRepository.findAllByPublisher(publisher.trim());
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to fetch books");
+            throw new RuntimeException("An error occurred when trying to fetch books");
 
         }
     }
@@ -82,7 +82,7 @@ public class BookService implements IBookService {
                 return bookRepository.findAllByPublishDate(date1);
             }
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to fetch books");
+            throw new RuntimeException("An error occurred when trying to fetch books");
         }
     }
 
@@ -93,7 +93,7 @@ public class BookService implements IBookService {
             //var bookCategory = BookCategory.valueOf(category);
             return bookRepository.findAllByCategoryContaining(category);
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to fetch books");
+            throw new RuntimeException("An error occurred when trying to fetch books");
         }
     }
 
@@ -113,7 +113,7 @@ public class BookService implements IBookService {
                     .message("Added successfully")
                     .build();
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to fetch books");
+            throw new RuntimeException("An error occurred when trying to save books");
         }
     }
 
@@ -141,7 +141,7 @@ public class BookService implements IBookService {
                         .build();
             }
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to fetch books");
+            throw new RuntimeException("An error occurred when trying to update books");
         }
     }
 
@@ -156,7 +156,7 @@ public class BookService implements IBookService {
             var book = bookRepository.findByBookIdAndBookName(bookId.trim(), bookName.trim());
             bookRepository.delete(book);
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to delete this book");
+            throw new RuntimeException("An error occurred when trying to delete this book");
         }
     }
 
@@ -171,7 +171,7 @@ public class BookService implements IBookService {
         try {
             return bookRepository.findAllByAuthor(author.trim());
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to fetch books");
+            throw new RuntimeException("An error occurred when trying to fetch books");
 
         }
     }
@@ -183,7 +183,7 @@ public class BookService implements IBookService {
             var date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
             return bookRepository.findByPublishDate(date);
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when trying to fetch books");
+            throw new RuntimeException("An error occurred when trying to fetch books");
 
         }
     }
@@ -208,7 +208,7 @@ public class BookService implements IBookService {
             book.setRestQuantity(book.getRestQuantity() - borrowQuntity);
             bookRepository.save(book);
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when updating the book");
+            throw new RuntimeException("An error occurred when updating the book");
         }
     }
 
@@ -216,7 +216,7 @@ public class BookService implements IBookService {
         try {
             return bookRepository.findBookStatistic();
         } catch (Exception e) {
-            throw new RuntimeException("An error occurs when fetching data");
+            throw new RuntimeException("An error occurred when fetching data");
         }
     }
 

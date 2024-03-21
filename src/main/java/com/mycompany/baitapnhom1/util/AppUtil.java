@@ -1,6 +1,7 @@
 package com.mycompany.baitapnhom1.util;
 
 import com.mycompany.baitapnhom1.entity.*;
+import com.mycompany.baitapnhom1.model.ReturnState;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
@@ -28,7 +29,7 @@ public class AppUtil {
     public static List<BookEntity> initialBooks() {
         List<BookEntity> items = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            var total = new Random().nextInt(100)+1;
+            var total = new Random().nextInt(100) + 1;
             var book = BookEntity.builder()
                     .bookId(UUID.randomUUID().toString())
                     .bookName(UUID.randomUUID().toString())
@@ -44,7 +45,7 @@ public class AppUtil {
         return items;
     }
 
-    public static List<BorrowFormEntity> initialBorrowedBooks(BookEntity book, UserEntity user){
+    public static List<BorrowFormEntity> initialBorrowedBooks(BookEntity book, UserEntity user) {
         List<BorrowFormEntity> items = new ArrayList<>();
         var item = BorrowFormEntity.builder()
                 .borrowId(String.valueOf(new Date().getTime()))
@@ -96,11 +97,11 @@ public class AppUtil {
     }
 
     public static Date getPublishDate(int year) {
-        LocalDate localDate = LocalDate.of(year,1,1);
+        LocalDate localDate = LocalDate.of(year, 1, 1);
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public static void setUpWindowListener(JFrame currentFrame, JFrame parentFrame,@Nullable CustomCallBackFunction function){
+    public static void setUpWindowListener(JFrame currentFrame, JFrame parentFrame, @Nullable CustomCallBackFunction function) {
         currentFrame.setLocationRelativeTo(null);
         currentFrame.setVisible(true);
         parentFrame.setVisible(false);
@@ -108,7 +109,7 @@ public class AppUtil {
             @Override
             public void windowClosed(WindowEvent e) {
                 parentFrame.setVisible(true);
-                if(function!=null){
+                if (function != null) {
                     function.call();
                 }
             }
@@ -116,11 +117,17 @@ public class AppUtil {
     }
 
     public static void checkValidInput(String... inputs) {
-        for(String input : inputs){
-            if(input.isBlank()){
+        for (String input : inputs) {
+            if (input.isBlank()) {
                 throw new RuntimeException("Please fill required fields");
             }
 
+        }
+    }
+
+    public static void checkValidQuantity(int... inputs) {
+        for (int i : inputs) {
+            if (i <= 0) throw new RuntimeException("The quantity must be greater than 0");
         }
     }
 }
