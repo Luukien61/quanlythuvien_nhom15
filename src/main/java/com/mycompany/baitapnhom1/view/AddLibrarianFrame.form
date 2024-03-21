@@ -32,38 +32,28 @@
               <EmptySpace min="-2" pref="172" max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jLabel3" max="32767" attributes="0"/>
-                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel4" alignment="0" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="btnAdd" min="-2" pref="90" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                      <Component id="btnDelete" min="-2" pref="90" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnCancel" min="-2" pref="90" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="txtId" max="32767" attributes="0"/>
-                          <Component id="txtName" max="32767" attributes="0"/>
-                          <Component id="txtPassword" alignment="0" pref="173" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
+              <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="txtId" pref="173" max="32767" attributes="0"/>
+                  <Component id="txtName" pref="173" max="32767" attributes="0"/>
+                  <Component id="txtPassword" pref="173" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+              <Component id="btnAdd" min="-2" pref="90" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="btnDelete" min="-2" pref="90" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+              <Component id="btnCancel" min="-2" pref="90" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -82,21 +72,18 @@
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtName" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtPassword" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="94" pref="188" max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="360" max="32767" attributes="0"/>
+              <EmptySpace pref="140" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnAdd" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnCancel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnDelete" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnAdd" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -112,16 +99,9 @@
         <Property name="text" type="java.lang.String" value="T&#xea;n nh&#xe2;n vi&#xea;n"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel4">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JTextField" name="txtId">
     </Component>
     <Component class="javax.swing.JTextField" name="txtName">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtPassword">
     </Component>
     <Component class="javax.swing.JButton" name="btnAdd">
       <Properties>
@@ -159,6 +139,13 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel4">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtPassword">
     </Component>
   </SubComponents>
 </Form>

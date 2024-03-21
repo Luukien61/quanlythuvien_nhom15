@@ -13,7 +13,7 @@ public interface IUserService {
     UserEntity findUserByPersonalId(String id) throws SQLException;
     boolean deleteUser(UserEntity user);
     void deleteUserById(String id);
-    void updateUser(String newPersonalId,String userName,Role role, String password, String id) throws SQLException;
+    void updateUser(String newPersonalId,String userName,Role role,  String id) throws SQLException;
     List<UserEntity> findAllUser();
     List<UserEntity> findAllUserByRole(Role role);
     UserEntity findUserByUserIdAndPassword(String id, String password) throws SQLException;

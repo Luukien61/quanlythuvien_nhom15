@@ -21,11 +21,11 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByUserNameIgnoreCase(String userName);
     List<UserEntity> findAll();
     @Modifying
-    @Query(value = "update user_entity set personal_id= :newPersonalId, password= :password, user_name= :userName,role= :role " +
+    @Query(value = "update user_entity set personal_id= :newPersonalId,  user_name= :userName,role= :role " +
             "where personal_id = :personalId",nativeQuery = true)
     void updateByPersonalId(
             @Param("newPersonalId") String newPersonalId,
-            @Param("password") String password,
+            //@Param("password") String password,
             @Param("userName") String userName,
             @Param("role") String role,
             @Param("personalId") String personalId);

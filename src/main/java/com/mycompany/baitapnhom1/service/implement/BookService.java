@@ -263,11 +263,11 @@ public class BookService implements IBookService {
         } else {
             try {
                 var books = searchBookByField(field, key);
-                if (books.getFirst() != null) {
+                if (!books.isEmpty()) {
                     items.addAll(books);
                 } else throw new RuntimeException("Không tìm thấy sách");
             } catch (RuntimeException e) {
-               throw new RuntimeException("An error occurs when finding books");
+               throw new RuntimeException(e.getMessage());
             }
         }
         return items;

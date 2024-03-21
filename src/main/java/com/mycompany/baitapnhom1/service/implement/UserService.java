@@ -11,7 +11,9 @@ import com.mycompany.baitapnhom1.util.JOptionPaneUtil;
 import com.mycompany.baitapnhom1.view.MenuFrame;
 import com.mycompany.baitapnhom1.view.UserMenuFrame;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +25,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-@AllArgsConstructor
 public class UserService implements IUserService {
     private UserRepository userRepository;
+    private BCryptPasswordEncoder passwordEncoder ;
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
 
     @Override
     public void saveUser(UserEntity user) throws SQLException {
@@ -33,7 +40,11 @@ public class UserService implements IUserService {
             var existUser = userRepository.findByPersonalId(user.getPersonalId());
             if (existUser.isPresent()) {
                 throw new IllegalArgumentException("The user already exist");
-            } else userRepository.save(user);
+            } else {
+                String encodePass = passwordEncoder.encode(user.getPassword());
+                user.setPassword(encodePass);
+                userRepository.save(user);
+            }
         } catch (Exception e) {
             throw new SQLException(e.getMessage());
         }
@@ -52,9 +63,6 @@ public class UserService implements IUserService {
     @Override
     public UserEntity findUserByPersonalId(String id) throws RuntimeException {
         try {
-            if (id == null) {
-                throw new RuntimeException("Please fill the require filed");
-            }
             return userRepository.findByPersonalId(id.trim().toUpperCase())
                     .orElseThrow(() -> new RuntimeException("The user doesn't exist"));
         } catch (Exception e) {
@@ -83,11 +91,12 @@ public class UserService implements IUserService {
 
     @Transactional
     @Override
-    public void updateUser(String newPersonalId, String userName, Role role, String password, String id) throws RuntimeException {
+    public void updateUser(String newPersonalId, String userName, Role role,  String id) throws RuntimeException {
         try {
             var existUser = userRepository.findByPersonalId(id);
             if (existUser.isPresent()) {
-                userRepository.updateByPersonalId(newPersonalId, password, userName, role.name(), id);
+                //String encodePass = passwordEncoder.encode(password);
+                userRepository.updateByPersonalId(newPersonalId, userName, role.name(), id);
             } else {
                 throw new RuntimeException("The user doesn't exist ");
             }
@@ -143,6 +152,8 @@ public class UserService implements IUserService {
             try {
                 var existUser = userRepository.findByPersonalId(user.getPersonalId());
                 if (existUser.isEmpty()) {
+                    String encodePass = passwordEncoder.encode(user.getPassword());
+                    user.setPassword(encodePass);
                     userRepository.save(user);
                 }
             } catch (Exception e) {
@@ -170,34 +181,39 @@ public class UserService implements IUserService {
     }
 
     @Transactional
-    public String saveOrUpdate(String userId, String userName, Role role, String password, UserEntity currentUser) throws SQLException {
-        var user = UserEntity.builder()
-                .personalId(userId)
-                .userName(userName)
-                .role(role)
-                .password(password)
-                .build();
+    public String saveOrUpdate(String userId, String userName, Role role,String password, UserEntity currentUser) throws SQLException {
+
         if (currentUser == null) {
+            var user = UserEntity.builder()
+                    .personalId(userId)
+                    .userName(userName)
+                    .password(password)
+                    .role(role)
+                    .build();
             saveUser(user);
             return "Added successfully";
         } else {
-            updateUser(userId, userName, role, password, currentUser.getPersonalId());
+            updateUser(userId, userName, role, currentUser.getPersonalId());
             return "Update successfully";
         }
     }
 
     public ResultModel login(String id, String pass) {
-        return checkUser(id, pass);
+        return checkUser(id, pass.trim());
     }
 
     private ResultModel checkUser(String id, String pass) {
         try {
-            UserEntity user = findUserByUserIdAndPassword(id, pass);
+            var user = findUserByPersonalId(id);
             if (user != null) {
-                return new ResultModel(user, "Đăng nhập thành công");
-            } else return new ResultModel(null, "Tên khoản hoặc mật khẩu không đúng. Vui lòng nhập lại");
-        } catch (SQLException e) {
+                boolean isPasswordMatch = passwordEncoder.matches(pass,user.getPassword());
+                if(isPasswordMatch){
+                    return new ResultModel(user, "Đăng nhập thành công");
+                }
+            }
+        } catch (Exception e) {
             return new ResultModel(null, e.getMessage());
         }
+        return new ResultModel(null, "Tên khoản hoặc mật khẩu không đúng. Vui lòng nhập lại");
     }
 }
