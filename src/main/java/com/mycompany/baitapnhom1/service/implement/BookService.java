@@ -203,9 +203,9 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public void updateQuantity(BookEntity book, int borrowQuntity) {
+    public void updateQuantity(BookEntity book, int borrowQuantity) {
         try {
-            book.setRestQuantity(book.getRestQuantity() - borrowQuntity);
+            book.setRestQuantity(book.getRestQuantity() - borrowQuantity);
             bookRepository.save(book);
         } catch (Exception e) {
             throw new RuntimeException("An error occurred when updating the book");

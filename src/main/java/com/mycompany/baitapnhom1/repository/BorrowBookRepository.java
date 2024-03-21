@@ -32,10 +32,12 @@ public interface BorrowBookRepository extends JpaRepository<BorrowFormEntity, St
             @Param("userId") String userId,
             @Param("bookId") String bookId);
 
-    @Query(value = "SELECT * FROM borrow_form_entity WHERE user_id = :userId AND book_id= :bookId AND ", nativeQuery = true)
+    @Query(value = "SELECT * FROM borrow_form_entity WHERE user_id = :userId AND book_id= :bookId AND state = :state", nativeQuery = true)
     List<BorrowFormEntity> findAllByUserAndBookAndReturnState(
             @Param("userId") String userId,
-            @Param("bookId") String bookId);
+            @Param("bookId") String bookId,
+            @Param("state") String state
+    );
 
 
     @Modifying

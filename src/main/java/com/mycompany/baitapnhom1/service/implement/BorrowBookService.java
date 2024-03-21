@@ -53,13 +53,12 @@ public class BorrowBookService implements IBorrowBookService {
             }
             var curentDate = new Date();
             var milliseconds = curentDate.getTime();
-            long returnTime = ((long) time * 30 * 24 * 60 * 60 * 1000);
             var borrowBook = BorrowFormEntity.builder()
                     .book(book)
                     .borrowDate(curentDate)
                     .borrowId("U" + userId + "B" + bookId + "T" + milliseconds)
                     .quantity(quantity)
-                    .expiredDate(new Date(milliseconds + returnTime))
+                    .expiredDate(getReturnDate(time, curentDate))
                     .user(user)
                     .state(NOT_YET)
                     .build();
@@ -188,19 +187,35 @@ public class BorrowBookService implements IBorrowBookService {
         return borrowBookRepository.findAllByState(EXPIRED);
     }
 
-    public void updateBorrowForm(BorrowFormEntity item,String userId, String bookId, int time, ReturnState state, int quantity) {
+    public void updateBorrowForm(BorrowFormEntity item, String userId, String bookId, int time, int quantity, boolean isChangeId) {
         try {
             var user = userService.findUserByPersonalId(userId);
             var book = bookService.findBookByBookId(bookId);
-            if (book.getRestQuantity() < quantity) {
+            var additionalQuantity = (quantity - item.getQuantity());
+            if (quantity>book.getTotalQuantity()) {
                 throw new RuntimeException("The remaining quantity of this book is insufficient");
             }
-            var items = borrowBookRepository.
-
+            if (isChangeId) {
+                var items = borrowBookRepository.findAllByUserAndBook(userId, bookId);
+                items.forEach(borrowForm -> {
+                    if (borrowForm.getState() != RETURNED) {
+                        throw new RuntimeException("This user is currently borrowing the book");
+                    }
+                });
+            }
+            item.setBook(book);
+            item.setUser(user);
+            item.setQuantity(quantity);
+            item.setExpiredDate(getReturnDate(time, item.getBorrowDate()));
+            bookService.updateQuantity(book, additionalQuantity);
+            borrowBookRepository.save(item);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
     }
 
+    private Date getReturnDate(int time, Date date) {
+        return new Date(date.getTime() + (long) time * 30 * 24 * 60 * 60 * 1000);
+    }
 }
