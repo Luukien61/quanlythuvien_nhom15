@@ -64,11 +64,14 @@ public class BorrowBookFrame extends javax.swing.JFrame {
                         menu.show(e.getComponent(), e.getX(), e.getY());
                     } else if (e.getClickCount() == 2) {
                         String borrowId = (String) model.getValueAt(row, 1);
-                        try {
-                            var item = borrowBookService.findByBorrowId(borrowId);
+                        String state = (String) model.getValueAt(row,7);
+                        if(state.equals(ReturnState.NOT_YET.getState())){
+                            try {
+                                var item = borrowBookService.findByBorrowId(borrowId);
                                 displayBorrowItem(item);
-                        } catch (RuntimeException ex) {
-                            JOptionPaneUtil.showErrorDialog(ex.getMessage(), null);
+                            } catch (RuntimeException ex) {
+                                JOptionPaneUtil.showErrorDialog(ex.getMessage(), null);
+                            }
                         }
                     }
                 } else {
