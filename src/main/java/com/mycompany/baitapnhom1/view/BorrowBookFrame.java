@@ -91,7 +91,7 @@ public class BorrowBookFrame extends javax.swing.JFrame {
         if (ReturnState.RETURNED.getState().equals(state)) {
             JOptionPane.showMessageDialog(
                     this,
-                    "This items was returned",
+                    "This item was returned",
                     "Action",
                     JOptionPane.INFORMATION_MESSAGE
             );

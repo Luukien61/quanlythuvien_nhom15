@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class UserService implements IUserService {
-    private UserRepository userRepository;
-    private BCryptPasswordEncoder passwordEncoder ;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder ;
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -64,12 +64,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean deleteUser(UserEntity user) {
+    public void deleteUser(UserEntity user) {
         try {
             userRepository.delete(user);
-            return true;
         } catch (Exception e) {
-            return false;
+            throw  new RuntimeException("");
         }
     }
 

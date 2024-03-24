@@ -164,7 +164,7 @@ public class BookService implements IBookService {
             var book = bookRepository.findByBookId(bookId.trim());
             book.ifPresent(bookEntity -> bookRepository.delete(bookEntity));
         } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("This book is currently borrowed."+'\n'+"Please return first");
+            throw new RuntimeException("This book is currently in borrow form list."+'\n'+"Please remove all this book's borrow form first");
         } catch (Exception e) {
             throw new RuntimeException("An error occurred when trying to delete this book");
         }
@@ -275,7 +275,7 @@ public class BookService implements IBookService {
                 var books = searchBookByField(field, key);
                 if (!books.isEmpty()) {
                     items.addAll(books);
-                } else throw new RuntimeException("Không tìm thấy sách");
+                } else throw new RuntimeException("There is no book matching");
             } catch (RuntimeException e) {
                 throw new RuntimeException(e.getMessage());
             }

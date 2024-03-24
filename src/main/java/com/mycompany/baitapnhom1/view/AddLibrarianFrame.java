@@ -197,9 +197,13 @@ public class AddLibrarianFrame extends javax.swing.JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
         if (option == JOptionPane.YES_NO_OPTION) {
-            userService.deleteUser(currentUser);
-            JOptionPaneUtil.showMessageDialog("Delete successfully", 800, this);
-            dispose();
+            try{
+                userService.deleteUser(currentUser);
+                JOptionPaneUtil.showMessageDialog("Delete successfully", 800, this);
+                dispose();
+            }catch (Exception e){
+                JOptionPaneUtil.showErrorDialog(e.getMessage(),this);
+            }
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 

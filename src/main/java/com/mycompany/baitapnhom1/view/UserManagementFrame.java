@@ -85,7 +85,7 @@ public class UserManagementFrame extends javax.swing.JFrame {
                     try {
                         var user = userService.findUserByPersonalId(id);
                         if (userRole == Role.ADMIN) {
-                            actionWithManager(user);
+                            showManagerActionFrame(user);
                         } else {
                             displayUserBorrowFrame(user);
                         }
@@ -296,7 +296,7 @@ public class UserManagementFrame extends javax.swing.JFrame {
     private void btnActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionActionPerformed
         switch (this.userRole) {
             case ADMIN -> {
-                actionWithManager(null);
+                showManagerActionFrame(null);
             }
             case MANAGER -> fetchNewUsersFromServer();
         }
@@ -326,7 +326,7 @@ public class UserManagementFrame extends javax.swing.JFrame {
         }
     }
 
-    private void actionWithManager(UserEntity user) {
+    private void showManagerActionFrame(UserEntity user) {
         AddLibrarianFrame frame = new AddLibrarianFrame(userService, user);
         AppUtil.setUpWindowListener(frame, this, this::fetchUpdatedManager);
     }

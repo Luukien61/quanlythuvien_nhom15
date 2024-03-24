@@ -11,7 +11,7 @@ public interface IUserService {
     UserEntity findUserByName(String userName) throws SQLException;
     List<UserEntity> fetchAllUser(Role role);
     UserEntity findUserByPersonalId(String id) throws SQLException;
-    boolean deleteUser(UserEntity user);
+    void deleteUser(UserEntity user);
     void deleteUserById(String id);
     void updateUser(String newPersonalId,String userName,Role role,  String id) throws SQLException;
     List<UserEntity> findAllUser();
