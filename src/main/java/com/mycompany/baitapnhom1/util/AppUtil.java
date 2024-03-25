@@ -131,4 +131,9 @@ public class AppUtil {
             if (i <= 0) throw new RuntimeException("The quantity must be greater than 0");
         }
     }
+
+    public static void logOut(JFrame frame){
+        frame.dispose();
+        AppUtil.setCurrentUser(null);
+    }
 }
