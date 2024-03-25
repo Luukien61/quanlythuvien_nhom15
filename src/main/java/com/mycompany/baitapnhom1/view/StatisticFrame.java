@@ -167,6 +167,7 @@ public class StatisticFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tableContent.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tableContent);
         if (tableContent.getColumnModel().getColumnCount() > 0) {
             tableContent.getColumnModel().getColumn(0).setResizable(false);
