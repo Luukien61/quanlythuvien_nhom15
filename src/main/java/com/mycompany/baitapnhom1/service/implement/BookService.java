@@ -179,7 +179,7 @@ public class BookService implements IBookService {
     @Override
     public List<BookEntity> findBookByAUthor(String author) {
         try {
-            return bookRepository.findAllByAuthor(author.trim());
+            return bookRepository.findAllByAuthorContaining(author.trim());
         } catch (Exception e) {
             throw new RuntimeException("An error occurred when trying to fetch books");
 

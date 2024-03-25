@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<BookEntity, String> {
     List<BookEntity> findAll();
-    List<BookEntity> findAllByAuthor(String author);
+    List<BookEntity> findAllByAuthorContaining(String author);
     List<BookEntity> findAllByCategory(BookCategory category);
     @Query(value = "SELECT * FROM book_entity where category like :category",nativeQuery = true)
     List<BookEntity> findAllByCategoryContaining(@Param("category") String category);
