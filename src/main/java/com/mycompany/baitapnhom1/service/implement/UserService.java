@@ -1,9 +1,9 @@
 package com.mycompany.baitapnhom1.service.implement;
 
 import com.mycompany.baitapnhom1.controller.GetUserController;
-import com.mycompany.baitapnhom1.model.Role;
 import com.mycompany.baitapnhom1.entity.UserEntity;
 import com.mycompany.baitapnhom1.model.ResultModel;
+import com.mycompany.baitapnhom1.model.Role;
 import com.mycompany.baitapnhom1.repository.UserRepository;
 import com.mycompany.baitapnhom1.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
