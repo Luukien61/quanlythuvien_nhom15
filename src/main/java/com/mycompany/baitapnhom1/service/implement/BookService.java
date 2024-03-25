@@ -176,6 +176,16 @@ public class BookService implements IBookService {
                 .orElseThrow(() -> new RuntimeException("The book doesn't exist"));
     }
 
+
+    public List<BookEntity> findBookByBookIdContaining(String bookId) {
+        try{
+            return bookRepository.findByBookIdContaining(bookId.trim());
+        }catch (Exception e){
+            throw new RuntimeException("The book doesn't exist");
+        }
+    }
+
+
     @Override
     public List<BookEntity> findBookByAUthor(String author) {
         try {
@@ -202,7 +212,7 @@ public class BookService implements IBookService {
     public List<BookEntity> searchBookByField(BookFields field, String key) {
         List<BookEntity> items = new ArrayList<>();
         switch (field) {
-            case BOOK_ID -> items.add(this.findBookByBookId(key));
+            case BOOK_ID -> items.addAll(this.findBookByBookIdContaining(key));
             case NAME -> items.addAll(this.findBookByNameContaining(key));
             case CATEGORY -> items.addAll(this.findBooksByCategory(key));
             case AUTHOR -> items.addAll(this.findBookByAUthor(key));

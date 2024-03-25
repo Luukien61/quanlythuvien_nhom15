@@ -20,6 +20,7 @@ public interface BookRepository extends JpaRepository<BookEntity, String> {
     @Query(value = "SELECT * FROM book_entity where category like :category",nativeQuery = true)
     List<BookEntity> findAllByCategoryContaining(@Param("category") String category);
     Optional<BookEntity> findByBookId(String bookId);
+    List<BookEntity> findByBookIdContaining(String bookId);
     List<BookEntity> findAllByPublisher(String publisher);
     List<BookEntity> findAllByPublishDate(Date date);
     List<BookEntity> findAllByBookNameContaining(String name);
